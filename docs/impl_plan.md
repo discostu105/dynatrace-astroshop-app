@@ -75,36 +75,73 @@ This document tracks the implementation status of all features in the Astroshop 
 - [x] Data model defined
 - [x] UI component structure planned
 
-### 2.2 Data Layer ⏸️
-- [ ] `useTraceInsights` hook - Fetch trace data
-- [ ] Service breakdown query
-- [ ] Error detection query
-- [ ] Database operations query
-- [ ] Total duration query
-- [ ] Performance badge calculation
+### 2.2 Data Layer ✅
+- [x] `useTraceInsights` hook - Fetch trace data
+- [x] Service breakdown query
+- [x] Error detection query
+- [x] Database operations query
+- [x] Total duration query
+- [x] Performance badge calculation
 
-### 2.3 UI Components ⏸️
-- [ ] `TraceInsightsPanel` - Main insights panel
-- [ ] `PerformanceOverviewCard` - Key metrics display
-- [ ] `ServiceBreakdownChart` - Bar chart visualization
-- [ ] `ErrorIndicators` - Error display (conditional)
-- [ ] `PerformanceBadge` - Inline table badge
+### 2.3 UI Components ✅
+- [x] `TraceInsightsPanel` - Main insights panel
+- [x] `PerformanceOverviewCard` - Key metrics display
+- [x] `ServiceBreakdownChart` - Bar chart visualization
+- [x] `ErrorIndicators` - Error display (conditional)
+- [x] `PerformanceBadge` - Inline table badge
 
-### 2.4 Features ⏸️
-- [ ] Display total trace duration
-- [ ] Show service breakdown chart
-- [ ] Highlight slowest services
-- [ ] Display database operation stats
-- [ ] Show error indicators (if present)
-- [ ] Performance badges in orders table
-- [ ] Loading states for trace data
-- [ ] Handle missing trace data gracefully
+### 2.4 Features ✅
+- [x] Display total trace duration
+- [x] Show service breakdown chart
+- [x] Highlight slowest services
+- [x] Display database operation stats
+- [x] Show error indicators (if present)
+- [x] Loading states for trace data
+- [x] Handle missing trace data gracefully
+- [x] "View Full Trace" button
+- [x] Integration into OrderDetailPanel
+- [ ] Performance badges in orders table (deferred - too expensive)
 
-### 2.5 Performance Optimizations ⏸️
-- [ ] Lazy-load trace insights (on panel open)
-- [ ] Cache trace insights per traceId
-- [ ] Parallel DQL queries for trace data
-- [ ] Debounce trace data fetching
+### 2.5 Performance Optimizations ✅
+- [x] Lazy-load trace insights (on panel open)
+- [x] Parallel DQL queries for trace data
+- [ ] Cache trace insights per traceId (in-memory via React)
+- [ ] Debounce trace data fetching (not needed - lazy loaded)
+
+### 2.6 Implementation Details ✅
+
+**Files Created:**
+- `ui/app/pages/OrderManagement/types/traceInsights.types.ts` - TypeScript type definitions
+- `ui/app/pages/OrderManagement/hooks/useTraceInsights.ts` - Data fetching hook (4 parallel DQL queries)
+- `ui/app/pages/OrderManagement/components/TraceInsights/TraceInsightsPanel.tsx` - Main container component
+- `ui/app/pages/OrderManagement/components/TraceInsights/PerformanceOverviewCard.tsx` - Overview metrics card
+- `ui/app/pages/OrderManagement/components/TraceInsights/ServiceBreakdownChart.tsx` - Horizontal bar chart
+- `ui/app/pages/OrderManagement/components/TraceInsights/ErrorIndicators.tsx` - Error display component
+- `ui/app/pages/OrderManagement/components/PerformanceBadge.tsx` - Reusable badge component
+
+**Files Modified:**
+- `app.config.json` - Added `storage:spans:read` scope
+- `ui/app/pages/OrderManagement/components/OrderDetailPanel.tsx` - Integrated TraceInsightsPanel
+
+**DQL Queries Implemented:**
+1. **Service Breakdown Query**: Groups spans by service.name, sums duration, counts spans
+2. **Error Detection Query**: Filters spans with exception.type, fetches error details
+3. **Database Operations Query**: Filters spans with db.statement, aggregates by db.system
+4. **Total Trace Metrics Query**: Calculates max duration, total spans, error count
+
+**Performance Badge Logic:**
+- 🟢 Fast: < 500ms
+- 🟡 Slow: 500ms - 2s  
+- 🔴 Very Slow: > 2s
+- ❌ Error: Has exceptions (overrides duration)
+
+**Key Design Decisions:**
+- Used 4 parallel DQL queries instead of single complex query for better performance
+- Implemented lazy loading - only fetch trace data when order detail panel opens
+- Duration stored in nanoseconds (native span format), converted to ms/s for display
+- Top 5 services shown in breakdown chart to avoid UI clutter
+- Conditional rendering - error indicators only shown if errors exist
+- Progressive disclosure pattern - quick insights → full trace (via button)
 
 ---
 
@@ -185,7 +222,7 @@ This document tracks the implementation status of all features in the Astroshop 
 
 ### 7.1 Configuration ✅
 - [x] `app.config.json` setup
-- [x] Required scopes configured
+- [x] Required scopes configured (`storage:logs:read`, `storage:buckets:read`, `storage:bizevents:read`, `storage:spans:read`)
 - [x] Environment URL configured
 - [x] Build configuration
 
@@ -212,10 +249,10 @@ This document tracks the implementation status of all features in the Astroshop 
 
 Core order management dashboard with filtering, search, and detail view.
 
-### Phase 2: Trace Insights (🚧 NEXT)
-**Duration**: 1-2 weeks  
-**Status**: ⏸️ Planned  
-**Start Date**: TBD
+### Phase 2: Trace Insights (✅ COMPLETE)
+**Duration**: 1 day  
+**Status**: ✅ Done  
+**Completed**: January 21, 2026
 
 Add inline trace performance insights to order details.
 
@@ -365,10 +402,10 @@ Testing, accessibility, performance optimization, documentation.
 - ❌ Blocked/Cancelled
 - ⚠️ Known Issue
 
-**File Count**: 15 implementation files  
-**Lines of Code**: ~2,500 lines  
-**Components**: 8 major components  
-**Hooks**: 4 custom hooks  
+**File Count**: 23 implementation files  
+**Lines of Code**: ~3,800 lines  
+**Components**: 13 major components  
+**Hooks**: 5 custom hooks  
 **Utilities**: 2 utility modules
 
 ---
@@ -376,14 +413,16 @@ Testing, accessibility, performance optimization, documentation.
 ## Next Actions
 
 ### Immediate (This Week)
-1. Start Phase 2: Trace Insights
-2. Create `useTraceInsights` hook
-3. Implement `TraceInsightsPanel` component
+1. ✅ ~~Start Phase 2: Trace Insights~~ (Complete)
+2. ✅ ~~Create `useTraceInsights` hook~~ (Complete)
+3. ✅ ~~Implement `TraceInsightsPanel` component~~ (Complete)
+4. Test trace insights with real data
+5. Gather user feedback on insights UI
 
 ### Short-term (Next 2 Weeks)
-1. Complete trace insights integration
-2. Add performance badges to orders table
-3. Write unit tests for existing features
+1. ✅ ~~Complete trace insights integration~~ (Complete)
+2. Write unit tests for trace insights
+3. Write unit tests for existing order management features
 
 ### Long-term (Next Month)
 1. Customer Journey implementation
