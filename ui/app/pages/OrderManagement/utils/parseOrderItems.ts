@@ -24,8 +24,8 @@ interface ItemEntry {
   };
 }
 
-export const parseOrderItems = (itemsJson: string): OrderItem[] => {
-  if (!itemsJson) return [];
+export const parseOrderItems = (itemsJson: string | null | undefined): OrderItem[] => {
+  if (!itemsJson || itemsJson === 'null' || itemsJson === 'undefined') return [];
   
   try {
     const entries: ItemEntry[] = JSON.parse(itemsJson);

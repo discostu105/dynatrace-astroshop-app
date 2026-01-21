@@ -87,7 +87,7 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
             <SkeletonText lines={3} />
           </Surface>
         </Flex>
-      ) : order && items ? (
+      ) : order ? (
         <>
           <OrderActions 
             traceId={order.traceId}
@@ -120,9 +120,11 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
             {order.traceId && <InfoRow label="Trace ID" value={order.traceId} />}
           </InfoSection>
           
-          <OrderItems items={items} />
-          
-          <Surface style={{ padding: '20px', borderRadius: '8px', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
+          {items && items.length > 0 ? (
+            <>
+              <OrderItems items={items} />
+              
+              <Surface style={{ padding: '20px', borderRadius: '8px', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
             <Flex flexDirection="column" gap={12}>
               <Flex justifyContent="space-between">
                 <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>Subtotal</Text>
@@ -139,11 +141,20 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
               </Flex>
             </Flex>
           </Surface>
+            </>
+          ) : (
+            <Surface style={{ padding: '20px', borderRadius: '8px' }}>              <Text style={{ color: 'var(--dt-colors-text-secondary-default)', textAlign: 'center' }}>
+                No items available for this order
+              </Text>
+            </Surface>
+          )}
           
-          <ShippingInfo 
-            trackingId={order.shippingTrackingId}
-            cost={order.shippingCostTotal}
-          />
+          {order.shippingTrackingId && (
+            <ShippingInfo 
+              trackingId={order.shippingTrackingId}
+              cost={order.shippingCostTotal}
+            />
+          )}
         </>
       ) : null}
     </Flex>

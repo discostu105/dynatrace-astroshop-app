@@ -15,7 +15,7 @@ export const OrderManagementPage = () => {
   const { orders, isLoading, error } = useOrders(filters);
   const { statistics, isLoading: isStatsLoading } = useOrderStatistics(filters);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-  const { orderWithItems, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId);
+  const { orderWithItems, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId, filters.timeframe);
 
   if (error) {
     return (

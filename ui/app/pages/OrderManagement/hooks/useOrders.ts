@@ -58,16 +58,20 @@ export const useOrders = (filters: OrderFilters) => {
 
   const orders: Order[] = useMemo(() => {
     if (!data?.records) return [];
-    return data.records.map((record: any) => ({
-      timestamp: record.timestamp,
-      orderId: record.orderId,
-      sessionId: record.sessionId,
-      shippingCostTotal: record.shippingCostTotal || 0,
-      shippingTrackingId: record.shippingTrackingId,
-      items: record.items,
-      traceId: record.trace_id,
-      eventType: record['event.type'],
-    }));
+    return data.records.map((record: any) => {
+      // Use orderId if available, otherwise use sessionId as fallback identifier
+      const identifier = record.orderId || `session:${record.sessionId}`;
+      return {
+        timestamp: record.timestamp,
+        orderId: identifier,
+        sessionId: record.sessionId,
+        shippingCostTotal: record.shippingCostTotal || 0,
+        shippingTrackingId: record.shippingTrackingId,
+        items: record.items,
+        traceId: record.trace_id,
+        eventType: record['event.type'],
+      };
+    });
   }, [data]);
 
   return { orders, isLoading, error };
