@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { Heading, Text } from '@dynatrace/strato-components/typography';
 import { formatCurrency } from '../utils/formatCurrency';
 
@@ -10,12 +10,22 @@ interface ShippingInfoProps {
 
 export const ShippingInfo = ({ trackingId, cost }: ShippingInfoProps) => {
   return (
-    <Flex flexDirection="column" gap={8}>
-      <Heading level={4}>Shipping</Heading>
-      {trackingId && (
-        <Text>Tracking: {trackingId}</Text>
-      )}
-      <Text>Cost: {formatCurrency(cost)}</Text>
-    </Flex>
+    <Surface style={{ padding: '16px', borderRadius: '8px' }}>
+      <Flex flexDirection="column" gap={12}>
+        <Heading level={5} style={{ fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px', color: 'var(--dt-colors-text-secondary-default)' }}>
+          Shipping Details
+        </Heading>
+        {trackingId && (
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text style={{ color: 'var(--dt-colors-text-secondary-default)', fontSize: '13px' }}>Tracking ID</Text>
+            <Text style={{ fontFamily: 'monospace', fontSize: '13px', fontWeight: '500' }}>{trackingId}</Text>
+          </Flex>
+        )}
+        <Flex justifyContent="space-between" alignItems="center">
+          <Text style={{ color: 'var(--dt-colors-text-secondary-default)', fontSize: '13px' }}>Shipping Cost</Text>
+          <Text style={{ fontWeight: '500', fontSize: '13px' }}>{formatCurrency(cost)}</Text>
+        </Flex>
+      </Flex>
+    </Surface>
   );
 };

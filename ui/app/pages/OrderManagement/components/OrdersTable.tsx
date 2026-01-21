@@ -11,13 +11,37 @@ interface OrdersTableProps {
   isLoading: boolean;
 }
 
+const StatusBadge = ({ isSuccess }: { isSuccess: boolean }) => (
+  <div
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      padding: '4px 12px',
+      borderRadius: '12px',
+      backgroundColor: isSuccess
+        ? 'rgba(44, 165, 44, 0.1)'
+        : 'rgba(239, 83, 80, 0.1)',
+      color: isSuccess
+        ? 'var(--dt-colors-charts-categorical-grass-default)'
+        : 'var(--dt-colors-charts-categorical-sunrise-default)',
+      fontSize: '12px',
+      fontWeight: '500',
+    }}
+  >
+    {isSuccess ? '✓ Success' : '✗ Failure'}
+  </div>
+);
+
 export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTableProps) => {
   const columns = [
     {
       id: 'status',
       header: 'Status',
-      accessor: (row: Order) => 
-        row.eventType.includes('success') ? '✅' : '❌',
+      accessor: (row: Order) => row.eventType.includes('success'),
+      cell: ({ value }: any) => <StatusBadge isSuccess={value} />,
+      columnType: 'default' as const,
+      width: 120,
+      minWidth: 120,
     },
     {
       id: 'orderId',
@@ -25,39 +49,55 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       accessor: 'orderId',
       cell: ({ value }: any) => (
         <Text 
-          style={{ cursor: 'pointer' }}
+          style={{ 
+            cursor: 'pointer', 
+            fontFamily: 'monospace',
+            color: 'var(--dt-colors-text-link-default)',
+          }}
           onClick={(e: any) => {
             e.stopPropagation();
             navigator.clipboard.writeText(value);
           }}
         >
-          {value.substring(0, 12)}...
+          {value.substring(0, 16)}...
         </Text>
       ),
+      columnType: 'default' as const,
+      width: 180,
+      minWidth: 150,
     },
     {
       id: 'timestamp',
       header: 'Timestamp',
       accessor: 'timestamp',
       cell: ({ value }: any) => (
-        <Text>{formatRelativeTime(value)}</Text>
+        <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>{formatRelativeTime(value)}</Text>
       ),
+      columnType: 'default' as const,
+      width: 120,
+      minWidth: 100,
     },
     {
       id: 'sessionId',
       header: 'Session ID',
       accessor: 'sessionId',
       cell: ({ value }: any) => (
-        <Text>{value.substring(0, 12)}...</Text>
+        <Text style={{ fontFamily: 'monospace', fontSize: '13px' }}>{value.substring(0, 16)}...</Text>
       ),
+      columnType: 'default' as const,
+      width: 180,
+      minWidth: 150,
     },
     {
       id: 'shippingCost',
       header: 'Shipping Cost',
       accessor: 'shippingCostTotal',
       cell: ({ value }: any) => (
-        <Text>{formatCurrency(value)}</Text>
+        <Text style={{ fontWeight: '500' }}>{formatCurrency(value)}</Text>
       ),
+      columnType: 'default' as const,
+      width: 130,
+      minWidth: 100,
     },
     {
       id: 'actions',
@@ -65,23 +105,30 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       accessor: (row: Order) => row.orderId,
       cell: ({ rowData }: any) => (
         <Button 
-          variant="default"
+          variant="accent"
           onClick={() => onSelectOrder(rowData.orderId)}
         >
           View
         </Button>
       ),
+      columnType: 'default' as const,
+      width: 100,
+      minWidth: 90,
     },
   ];
 
   if (isLoading) {
-    return <Text>Loading orders...</Text>;
+    return (
+      <div style={{ padding: '64px', textAlign: 'center' }}>
+        <Text style={{ fontSize: '14px', color: 'var(--dt-colors-text-secondary-default)' }}>Loading orders...</Text>
+      </div>
+    );
   }
 
   if (orders.length === 0) {
     return (
-      <div style={{ padding: '32px', textAlign: 'center' }}>
-        <Text>No orders found. Try adjusting your filters.</Text>
+      <div style={{ padding: '64px', textAlign: 'center' }}>
+        <Text style={{ fontSize: '14px', color: 'var(--dt-colors-text-secondary-default)' }}>No orders found. Try adjusting your filters.</Text>
       </div>
     );
   }
