@@ -1,9 +1,8 @@
 {
   "$schema": "./.dt-app/app.config.schema.json",
-  "environmentUrl": "https://my_tenant.apps.dynatracelabs.com/",
   "app": {
     "name": "astroshop-app",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "A starting project with routing, fetching data, and charting",
     "id": "my.astroshop.app",
     "scopes": [
