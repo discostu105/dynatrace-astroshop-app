@@ -2,9 +2,10 @@
   "$schema": "./.dt-app/app.config.schema.json",
   "app": {
     "name": "astroshop-app",
-    "version": "0.1.0",
+    "version": "0.3.0",
     "description": "A starting project with routing, fetching data, and charting",
     "id": "my.astroshop.app",
+    "icon": "docs/assets/astroshop-icon.png",
     "scopes": [
       { "name": "storage:logs:read", "comment": "default template" },
       { "name": "storage:buckets:read", "comment": "default template" },

@@ -1,8 +1,25 @@
-# Getting Started with your Dynatrace App
+# AstroShop Demo App
 
-This project was bootstrapped with Dynatrace App Toolkit.
+> **Note:** This is a demo application for demonstration purposes only. It showcases how to build Dynatrace Apps using real observability data.
 
-It uses React in combination with TypeScript, to provide great developer experience.
+A Dynatrace App that provides business analytics and monitoring for the fictional AstroShop e-commerce platform. This app demonstrates how to query and visualize observability data from Dynatrace Grail using DQL (Dynatrace Query Language).
+
+## Features
+
+- **Order Analytics**: View order volume trends, revenue metrics, and conversion rates
+- **Performance Monitoring**: Analyze checkout flow performance and identify bottlenecks
+- **Business Events**: Query and visualize business events from Grail
+- **Interactive Charts**: Time-series visualizations using Strato Design System components
+
+## Screenshots
+
+![Order Analytics Dashboard](docs/assets/screenshot-1.png)
+
+![Performance Metrics](docs/assets/screenshot-2.png)
+
+## Tech Stack
+
+This project was bootstrapped with Dynatrace App Toolkit and uses React with TypeScript for a great developer experience.
 
 ## Available Scripts
 
