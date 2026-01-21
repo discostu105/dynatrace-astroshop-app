@@ -1,0 +1,68 @@
+import React, { useState, useMemo } from 'react';
+import { Flex } from '@dynatrace/strato-components/layouts';
+import { OrderHeader } from './components/OrderHeader';
+import { OrderFilters } from './components/OrderFilters';
+import { OrdersTable } from './components/OrdersTable';
+import { OrderDetailPanel } from './components/OrderDetailPanel';
+import { useOrderFilters } from './hooks/useOrderFilters';
+import { useOrders } from './hooks/useOrders';
+import { useOrderDetail } from './hooks/useOrderDetail';
+import type { OrderStatistics } from './types/order.types';
+
+export const OrderManagementPage = () => {
+  const { filters, updateStatus, updateSearchTerm } = useOrderFilters();
+  const { orders, isLoading, error } = useOrders(filters);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const { orderWithItems, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId);
+
+  const statistics: OrderStatistics = useMemo(() => {
+    const totalOrders = orders.length;
+    const successfulOrders = orders.filter(o => o.eventType.includes('success')).length;
+    const failedOrders = totalOrders - successfulOrders;
+    const successRate = totalOrders > 0 ? (successfulOrders / totalOrders) * 100 : 0;
+
+    return {
+      totalOrders,
+      successfulOrders,
+      failedOrders,
+      successRate,
+    };
+  }, [orders]);
+
+  if (error) {
+    return (
+      <div style={{ padding: '16px' }}>
+        <p>Error loading orders: {error.message}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Flex flexDirection="column" style={{ position: 'relative', height: '100%' }}>
+      <OrderHeader statistics={statistics} isLoading={isLoading} />
+      
+      <OrderFilters
+        status={filters.status}
+        searchTerm={filters.searchTerm}
+        onStatusChange={updateStatus}
+        onSearchChange={updateSearchTerm}
+      />
+      
+      <div style={{ flex: 1, overflow: 'auto', padding: '16px' }}>
+        <OrdersTable
+          orders={orders}
+          onSelectOrder={setSelectedOrderId}
+          isLoading={isLoading}
+        />
+      </div>
+      
+      {selectedOrderId && orderWithItems && !isDetailLoading && (
+        <OrderDetailPanel
+          order={orderWithItems.order}
+          items={orderWithItems.items}
+          onClose={() => setSelectedOrderId(null)}
+        />
+      )}
+    </Flex>
+  );
+};

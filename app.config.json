@@ -8,7 +8,8 @@
     "id": "my.astroshop.app",
     "scopes": [
       { "name": "storage:logs:read", "comment": "default template" },
-      { "name": "storage:buckets:read", "comment": "default template" }
+      { "name": "storage:buckets:read", "comment": "default template" },
+      { "name": "storage:bizevents:read", "comment": "Read business events for order data" }
     ]
   }
 }
