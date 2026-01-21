@@ -20,7 +20,7 @@ const formatTimeForDQL = (timeValue: TimeValue): string => {
 export const useOrderDetail = (orderId: string | null, timeframe?: Timeframe) => {
   // Check if this is a session-based identifier (for failed orders without orderId)
   const isSessionBased = orderId?.startsWith('session:');
-  const sessionId = isSessionBased ? orderId.replace('session:', '') : null;
+  const sessionId = isSessionBased && orderId ? orderId.replace('session:', '') : null;
   
   // Build time range for query
   const fromTime = timeframe ? formatTimeForDQL(timeframe.from) : 'now()-24h';

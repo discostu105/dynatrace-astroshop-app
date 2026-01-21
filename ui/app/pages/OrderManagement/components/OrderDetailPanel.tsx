@@ -16,12 +16,33 @@ interface OrderDetailPanelProps {
   isLoading: boolean;
 }
 
-const InfoSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <Surface style={{ padding: '16px', borderRadius: '8px' }}>
-    <Flex flexDirection="column" gap={12}>
-      <Heading level={5} style={{ color: 'var(--dt-colors-text-secondary-default)', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-        {title}
-      </Heading>
+const InfoSection = ({ title, icon, children }: { title: string; icon: string; children: React.ReactNode }) => (
+  <Surface style={{ 
+    padding: '20px', 
+    borderRadius: '12px',
+    border: '1px solid var(--dt-colors-border-neutral-default)',
+    transition: 'box-shadow 0.2s ease',
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.08)';
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = 'none';
+  }}
+  >
+    <Flex flexDirection="column" gap={16}>
+      <Flex alignItems="center" gap={8}>
+        <span style={{ fontSize: '18px' }}>{icon}</span>
+        <Heading level={5} style={{ 
+          color: 'var(--dt-colors-text-primary-default)', 
+          fontSize: '14px', 
+          textTransform: 'uppercase', 
+          letterSpacing: '0.5px',
+          fontWeight: '600'
+        }}>
+          {title}
+        </Heading>
+      </Flex>
       {children}
     </Flex>
   </Surface>
@@ -60,13 +81,16 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
       }}
     >
       <Flex justifyContent="space-between" alignItems="center">
-        <Heading level={3}>Order Details</Heading>
+        <Flex alignItems="center" gap={12}>
+          <span style={{ fontSize: '24px' }}>📋</span>
+          <Heading level={3}>Order Details</Heading>
+        </Flex>
         <Button 
           variant="default" 
           onClick={onClose}
           style={{ fontSize: '20px', padding: '8px 12px' }}
         >
-          ×
+          ✕
         </Button>
       </Flex>
       
@@ -96,48 +120,71 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
             timestamp={order.timestamp}
           />
           
-          <InfoSection title="Order Information">
+          <InfoSection title="Order Information" icon="📦">
             <Flex 
               style={{ 
-                padding: '12px 16px', 
-                borderRadius: '6px', 
+                padding: '16px 20px', 
+                borderRadius: '8px', 
                 backgroundColor: isSuccess 
-                  ? 'rgba(44, 165, 44, 0.08)' 
-                  : 'rgba(239, 83, 80, 0.08)',
-                border: `1px solid ${isSuccess 
-                  ? 'rgba(44, 165, 44, 0.2)' 
-                  : 'rgba(239, 83, 80, 0.2)'}`
+                  ? 'rgba(44, 165, 44, 0.1)' 
+                  : 'rgba(239, 83, 80, 0.1)',
+                border: `2px solid ${isSuccess 
+                  ? 'rgba(44, 165, 44, 0.3)' 
+                  : 'rgba(239, 83, 80, 0.3)'}`
               }}
               alignItems="center"
-              gap={8}
+              gap={12}
             >
-              <Text style={{ fontSize: '18px' }}>{isSuccess ? '✓' : '✗'}</Text>
-              <Text style={{ fontWeight: '600' }}>{isSuccess ? 'Successful Order' : 'Failed Order'}</Text>
+              <Text style={{ fontSize: '24px' }}>{isSuccess ? '✅' : '❌'}</Text>
+              <Text style={{ fontWeight: '700', fontSize: '15px' }}>{isSuccess ? 'Successful Order' : 'Failed Order'}</Text>
             </Flex>
-            <InfoRow label="Order ID" value={order.orderId} />
-            <InfoRow label="Created" value={formatTimestamp(order.timestamp)} />
-            <InfoRow label="Session ID" value={order.sessionId} />
-            {order.traceId && <InfoRow label="Trace ID" value={order.traceId} />}
+            <InfoRow label="🆔 Order ID" value={order.orderId} />
+            <InfoRow label="🕐 Created" value={formatTimestamp(order.timestamp)} />
+            <InfoRow label="🔗 Session ID" value={order.sessionId} />
+            {order.traceId && <InfoRow label="🔍 Trace ID" value={order.traceId} />}
           </InfoSection>
           
           {items && items.length > 0 ? (
             <>
               <OrderItems items={items} />
               
-              <Surface style={{ padding: '20px', borderRadius: '8px', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
-            <Flex flexDirection="column" gap={12}>
-              <Flex justifyContent="space-between">
-                <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>Subtotal</Text>
-                <Text>{formatCurrency(subtotal)}</Text>
+              <Surface style={{ 
+                padding: '24px', 
+                borderRadius: '12px', 
+                backgroundColor: 'var(--dt-colors-background-container-default)',
+                border: '2px solid var(--dt-colors-border-neutral-default)',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)'
+              }}>
+            <Flex flexDirection="column" gap={16}>
+              <Flex alignItems="center" gap={8}>
+                <span style={{ fontSize: '20px' }}>💰</span>
+                <Heading level={5} style={{ fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Order Total
+                </Heading>
               </Flex>
               <Flex justifyContent="space-between">
-                <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>Shipping</Text>
-                <Text>{formatCurrency(order.shippingCostTotal)}</Text>
+                <Flex alignItems="center" gap={6}>
+                  <span style={{ fontSize: '14px' }}>🛒</span>
+                  <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>Subtotal</Text>
+                </Flex>
+                <Text style={{ fontWeight: '500' }}>{formatCurrency(subtotal)}</Text>
               </Flex>
-              <div style={{ height: '1px', backgroundColor: 'var(--dt-colors-border-neutral-default)', margin: '8px 0' }} />
+              <Flex justifyContent="space-between">
+                <Flex alignItems="center" gap={6}>
+                  <span style={{ fontSize: '14px' }}>🚚</span>
+                  <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>Shipping</Text>
+                </Flex>
+                <Text style={{ fontWeight: '500' }}>{formatCurrency(order.shippingCostTotal)}</Text>
+              </Flex>
+              <div style={{ height: '2px', backgroundColor: 'var(--dt-colors-border-neutral-default)', margin: '8px 0' }} />
               <Flex justifyContent="space-between" alignItems="center">
-                <Text style={{ fontSize: '16px', fontWeight: '600' }}>Total</Text>
-                <Text style={{ fontSize: '20px', fontWeight: '600' }}>{formatCurrency(total)}</Text>
+                <Flex alignItems="center" gap={8}>
+                  <span style={{ fontSize: '18px' }}>💵</span>
+                  <Text style={{ fontSize: '16px', fontWeight: '700' }}>Total</Text>
+                </Flex>
+                <Text style={{ fontSize: '24px', fontWeight: '700', color: 'var(--dt-colors-charts-categorical-grass-default)' }}>
+                  {formatCurrency(total)}
+                </Text>
               </Flex>
             </Flex>
           </Surface>

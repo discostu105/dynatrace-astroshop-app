@@ -4,6 +4,7 @@ import { Button } from '@dynatrace/strato-components/buttons';
 import { Text } from '@dynatrace/strato-components/typography';
 import type { Order } from '../types/order.types';
 import { formatCurrency, formatRelativeTime } from '../utils/formatCurrency';
+import { parseOrderItems } from '../utils/parseOrderItems';
 
 interface OrdersTableProps {
   orders: Order[];
@@ -16,6 +17,7 @@ const StatusBadge = ({ isSuccess }: { isSuccess: boolean }) => (
     style={{
       display: 'inline-flex',
       alignItems: 'center',
+      gap: '6px',
       padding: '4px 12px',
       borderRadius: '12px',
       backgroundColor: isSuccess
@@ -28,7 +30,8 @@ const StatusBadge = ({ isSuccess }: { isSuccess: boolean }) => (
       fontWeight: '500',
     }}
   >
-    {isSuccess ? '✓ Success' : '✗ Failure'}
+    <span style={{ fontSize: '14px' }}>{isSuccess ? '✅' : '❌'}</span>
+    {isSuccess ? 'Success' : 'Failure'}
   </div>
 );
 
@@ -91,7 +94,7 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
     },
     {
       id: 'shippingCost',
-      header: 'Shipping Cost',
+      header: '🚚 Shipping',
       accessor: 'shippingCostTotal',
       cell: ({ value }: any) => (
         <Text style={{ fontWeight: '500' }}>{formatCurrency(value)}</Text>
@@ -99,6 +102,35 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       columnType: 'default' as const,
       width: 130,
       minWidth: 100,
+    },
+    {
+      id: 'itemCount',
+      header: '🛒 Items',
+      accessor: (row: Order) => {
+        try {
+          const items = parseOrderItems(row.items);
+          return items.length;
+        } catch {
+          return 0;
+        }
+      },
+      cell: ({ value }: any) => (
+        <div style={{ 
+          display: 'inline-flex', 
+          alignItems: 'center', 
+          gap: '6px',
+          padding: '4px 12px',
+          borderRadius: '12px',
+          backgroundColor: 'var(--dt-colors-background-surface-default)',
+          border: '1px solid var(--dt-colors-border-neutral-default)',
+        }}>
+          <Text style={{ fontWeight: '600', fontSize: '14px' }}>{value}</Text>
+          <Text style={{ fontSize: '11px', color: 'var(--dt-colors-text-secondary-default)' }}>items</Text>
+        </div>
+      ),
+      columnType: 'default' as const,
+      width: 110,
+      minWidth: 90,
     },
     {
       id: 'actions',
@@ -121,6 +153,7 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
   if (isLoading) {
     return (
       <div style={{ padding: '64px', textAlign: 'center' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px' }}>⏳</div>
         <Text style={{ fontSize: '14px', color: 'var(--dt-colors-text-secondary-default)' }}>Loading orders...</Text>
       </div>
     );
@@ -129,7 +162,9 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
   if (orders.length === 0) {
     return (
       <div style={{ padding: '64px', textAlign: 'center' }}>
-        <Text style={{ fontSize: '14px', color: 'var(--dt-colors-text-secondary-default)' }}>No orders found. Try adjusting your filters.</Text>
+        <div style={{ fontSize: '64px', marginBottom: '16px' }}>📭</div>
+        <Text style={{ fontSize: '16px', fontWeight: '600', marginBottom: '8px' }}>No orders found</Text>
+        <Text style={{ fontSize: '14px', color: 'var(--dt-colors-text-secondary-default)' }}>Try adjusting your filters or time range</Text>
       </div>
     );
   }

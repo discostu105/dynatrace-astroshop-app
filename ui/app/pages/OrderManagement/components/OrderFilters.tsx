@@ -61,7 +61,7 @@ export const OrderFilters = ({
       
       <div style={{ flex: 1, minWidth: '250px', maxWidth: '400px' }}>
         <TextInput
-          placeholder="Search by Order ID..."
+          placeholder="🔍 Search by Order ID..."
           value={searchTerm}
           onChange={(value) => onSearchChange(value)}
         />
