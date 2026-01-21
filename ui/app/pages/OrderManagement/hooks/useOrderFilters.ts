@@ -5,8 +5,16 @@ import type { OrderFilters } from '../types/order.types';
 export const useOrderFilters = () => {
   const [filters, setFilters] = useState<OrderFilters>({
     timeframe: {
-      from: 'now-2h',
-      to: 'now',
+      from: {
+        absoluteDate: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        value: 'now-2h',
+        type: 'expression',
+      },
+      to: {
+        absoluteDate: new Date().toISOString(),
+        value: 'now',
+        type: 'expression',
+      },
     },
     status: 'all',
     searchTerm: '',
@@ -14,7 +22,7 @@ export const useOrderFilters = () => {
 
   const updateTimeframe = (timeframe: Timeframe) => {
     if (timeframe) {
-      setFilters(prev => ({ ...prev, timeframe: { from: timeframe.from, to: timeframe.to } }));
+      setFilters(prev => ({ ...prev, timeframe }));
     }
   };
 

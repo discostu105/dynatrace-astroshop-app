@@ -1,48 +1,22 @@
 import { useDql } from '@dynatrace-sdk/react-hooks';
 import { useMemo } from 'react';
+import type { TimeValue } from '@dynatrace/strato-components-preview/core';
 import type { Order, OrderFilters } from '../types/order.types';
 
 // Helper to convert timeframe values to DQL format
-const formatTimeForDQL = (timeValue: any): string => {
-  // Handle undefined or null
-  if (!timeValue) {
-    return 'now()';
-  }
-  
-  // Handle Date objects
-  if (timeValue instanceof Date) {
-    return `"${timeValue.toISOString()}"`;
-  }
-  
-  // Handle numbers (timestamps)
-  if (typeof timeValue === 'number') {
-    return `"${new Date(timeValue).toISOString()}"`;
-  }
-  
-  // Handle objects (extract value property if present)
-  if (typeof timeValue === 'object' && timeValue.value !== undefined) {
-    return formatTimeForDQL(timeValue.value);
-  }
-  
-  // Handle strings
-  if (typeof timeValue !== 'string') {
-    console.warn('Unexpected timeValue type:', typeof timeValue, timeValue);
-    return 'now()';
-  }
-  
-  // Remove any existing quotes
-  const cleanValue = timeValue.replace(/^["']|["']$/g, '');
+const formatTimeForDQL = (timeValue: TimeValue): string => {
+  const value = timeValue.value;
   
   // If it's 'now', convert to 'now()'
-  if (cleanValue === 'now') {
+  if (value === 'now') {
     return 'now()';
   }
   // If it's a relative time string like 'now-2h', convert to 'now()-2h' (NO QUOTES)
-  if (cleanValue.startsWith('now-') || cleanValue.startsWith('now+') || cleanValue.startsWith('now()')) {
-    return cleanValue.replace(/^now(?!\()/, 'now()');
+  if (value.startsWith('now-') || value.startsWith('now+') || value.startsWith('now()')) {
+    return value.replace(/^now(?!\()/, 'now()');
   }
-  // Otherwise assume it's an ISO string and return with quotes for DQL
-  return `"${cleanValue}"`;
+  // Otherwise use the absoluteDate ISO string with quotes for DQL
+  return `"${timeValue.absoluteDate}"`;
 };
 
 export const useOrders = (filters: OrderFilters) => {

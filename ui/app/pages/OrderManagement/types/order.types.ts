@@ -1,3 +1,5 @@
+import type { Timeframe } from '@dynatrace/strato-components-preview/core';
+
 export interface Order {
   timestamp: string;
   orderId: string;
@@ -22,7 +24,7 @@ export interface OrderItem {
 }
 
 export interface OrderFilters {
-  timeframe: { from: string | Date | number; to: string | Date | number };
+  timeframe: Timeframe;
   status: 'all' | 'success' | 'failure';
   searchTerm: string; // Order ID
 }
