@@ -1,6 +1,6 @@
 {
   "$schema": "./.dt-app/app.config.schema.json",
-  "environmentUrl": "https://your_tenant.apps.dynatracelabs.com/",
+  "environmentUrl": "https://my_tenant.apps.dynatracelabs.com/",
   "app": {
     "name": "astroshop-app",
     "version": "0.0.0",
