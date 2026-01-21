@@ -7,6 +7,10 @@ This repository contains a **Dynatrace App** built with the Dynatrace App Toolki
 
 If you want to do DQL queries, always check the knowledgebase (`dql_search`).
 
+# UI Components - Strato
+
+Use the `dynatrace-apps` MCP server to get documentation for strato components.
+
 ## Core Concepts
 ### Dynatrace Apps  
 - UI is **TypeScript/React** using **Strato Design System** components for consistent Dynatrace UX.  

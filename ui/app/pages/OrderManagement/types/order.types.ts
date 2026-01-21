@@ -22,7 +22,7 @@ export interface OrderItem {
 }
 
 export interface OrderFilters {
-  timeframe: { from: Date; to: Date };
+  timeframe: { from: string | Date | number; to: string | Date | number };
   status: 'all' | 'success' | 'failure';
   searchTerm: string; // Order ID
 }

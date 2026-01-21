@@ -12,23 +12,9 @@ import type { OrderStatistics } from './types/order.types';
 
 export const OrderManagementPage = () => {
   const { filters, updateStatus, updateSearchTerm, updateTimeframe } = useOrderFilters();
-  const { orders, isLoading, error, refetch } = useOrders(filters);
+  const { orders, isLoading, error } = useOrders(filters);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const { orderWithItems, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId);
-
-  const handleTimeframeChange = (timeframe: Timeframe) => {
-    if (timeframe) {
-      const from = timeframe.from === 'now' ? new Date() : new Date(timeframe.from);
-      const to = timeframe.to === 'now' ? new Date() : new Date(timeframe.to);
-      updateTimeframe(from, to);
-    }
-  };
-
-  const handleRefresh = () => {
-    if (refetch) {
-      refetch();
-    }
-  };
 
   const statistics: OrderStatistics = useMemo(() => {
     const totalOrders = orders.length;
@@ -59,14 +45,11 @@ export const OrderManagementPage = () => {
       <OrderFilters
         status={filters.status}
         searchTerm={filters.searchTerm}
-        timeframe={{
-          from: filters.timeframe.from.toISOString(),
-          to: filters.timeframe.to.toISOString(),
-        }}
+        timeframe={filters.timeframe}
         onStatusChange={updateStatus}
         onSearchChange={updateSearchTerm}
-        onTimeframeChange={handleTimeframeChange}
-        onRefresh={handleRefresh}
+        onTimeframeChange={updateTimeframe}
+        onRefresh={() => {}}
       />
       
       <div style={{ flex: 1, overflow: 'auto', padding: '24px' }}>

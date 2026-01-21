@@ -1,18 +1,21 @@
 import { useState } from 'react';
+import type { Timeframe } from '@dynatrace/strato-components-preview/core';
 import type { OrderFilters } from '../types/order.types';
 
 export const useOrderFilters = () => {
   const [filters, setFilters] = useState<OrderFilters>({
     timeframe: {
-      from: new Date(Date.now() - 2 * 60 * 60 * 1000), // Last 2 hours
-      to: new Date(),
+      from: 'now-2h',
+      to: 'now',
     },
     status: 'all',
     searchTerm: '',
   });
 
-  const updateTimeframe = (from: Date, to: Date) => {
-    setFilters(prev => ({ ...prev, timeframe: { from, to } }));
+  const updateTimeframe = (timeframe: Timeframe) => {
+    if (timeframe) {
+      setFilters(prev => ({ ...prev, timeframe: { from: timeframe.from, to: timeframe.to } }));
+    }
   };
 
   const updateStatus = (status: 'all' | 'success' | 'failure') => {
