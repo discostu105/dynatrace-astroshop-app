@@ -1,21 +1,28 @@
 import React from 'react';
 import { Flex } from '@dynatrace/strato-components/layouts';
-import { Button } from '@dynatrace/strato-components/buttons';
+import { Button, IntentButton } from '@dynatrace/strato-components/buttons';
 import { Heading } from '@dynatrace/strato-components/typography';
+import { IntentPayload } from '@dynatrace-sdk/navigation';
 
 interface OrderActionsProps {
   traceId: string;
   sessionId: string;
   orderId: string;
+  timestamp: string;
 }
 
-export const OrderActions = ({ traceId, sessionId, orderId }: OrderActionsProps) => {
+export const OrderActions = ({ traceId, sessionId, orderId, timestamp }: OrderActionsProps) => {
   const copyOrderId = () => {
     navigator.clipboard.writeText(orderId);
   };
 
   const copyTraceId = () => {
     navigator.clipboard.writeText(traceId);
+  };
+
+  const traceIntent: IntentPayload = {
+    'trace_id': traceId,
+    'timestamp': timestamp,
   };
 
   return (
@@ -39,6 +46,15 @@ export const OrderActions = ({ traceId, sessionId, orderId }: OrderActionsProps)
           📋 Copy Trace ID
         </Button>
       </Flex>
+      <IntentButton 
+        payload={traceIntent}
+        variant="emphasized"
+        color="primary"
+        appId="dynatrace.distributedtracing"
+        intentId="view-trace-addon"
+      >
+        🔍 View Trace
+      </IntentButton>
     </Flex>
   );
 };

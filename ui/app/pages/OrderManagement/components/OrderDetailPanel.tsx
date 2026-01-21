@@ -89,25 +89,12 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
         </Flex>
       ) : order && items ? (
         <>
-          {/* Prominent View Trace Button at the Top */}
-          <Button 
-            variant="emphasized"
-            onClick={() => {
-              const traceUrl = `/ui/diagnostictools/purepaths?gtf=-2h&gf=all&trace=${order.traceId}`;
-              window.open(traceUrl, '_blank');
-            }}
-            style={{ 
-              width: '100%',
-              fontSize: '16px',
-              fontWeight: '600',
-              padding: '16px 20px',
-              background: 'linear-gradient(135deg, #1496ff 0%, #0f7ed6 100%)',
-              boxShadow: '0 6px 16px rgba(20, 150, 255, 0.4)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            🔍 View Distributed Trace
-          </Button>
+          <OrderActions 
+            traceId={order.traceId}
+            sessionId={order.sessionId}
+            orderId={order.orderId}
+            timestamp={order.timestamp}
+          />
           
           <InfoSection title="Order Information">
             <Flex 
@@ -156,12 +143,6 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
           <ShippingInfo 
             trackingId={order.shippingTrackingId}
             cost={order.shippingCostTotal}
-          />
-          
-          <OrderActions 
-            traceId={order.traceId}
-            sessionId={order.sessionId}
-            orderId={order.orderId}
           />
         </>
       ) : null}
