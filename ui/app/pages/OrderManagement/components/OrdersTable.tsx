@@ -47,24 +47,25 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       id: 'orderId',
       header: 'Order ID',
       accessor: 'orderId',
-      cell: ({ value }: any) => (
+      cell: ({ value, rowData }: any) => (
         <Text 
           style={{ 
             cursor: 'pointer', 
             fontFamily: 'monospace',
+            fontSize: '12px',
             color: 'var(--dt-colors-text-link-default)',
           }}
           onClick={(e: any) => {
             e.stopPropagation();
-            navigator.clipboard.writeText(value);
+            navigator.clipboard.writeText(value || rowData.orderId);
           }}
         >
-          {value.substring(0, 16)}...
+          {value || rowData.orderId || 'N/A'}
         </Text>
       ),
       columnType: 'default' as const,
-      width: 180,
-      minWidth: 150,
+      width: 280,
+      minWidth: 280,
     },
     {
       id: 'timestamp',
@@ -82,11 +83,11 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: 'Session ID',
       accessor: 'sessionId',
       cell: ({ value }: any) => (
-        <Text style={{ fontFamily: 'monospace', fontSize: '13px' }}>{value.substring(0, 16)}...</Text>
+        <Text style={{ fontFamily: 'monospace', fontSize: '12px' }}>{value}</Text>
       ),
       columnType: 'default' as const,
-      width: 180,
-      minWidth: 150,
+      width: 280,
+      minWidth: 280,
     },
     {
       id: 'shippingCost',

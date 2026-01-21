@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Flex } from '@dynatrace/strato-components/layouts';
 import type { Timeframe } from '@dynatrace/strato-components-preview/core';
 import { OrderHeader } from './components/OrderHeader';
@@ -8,27 +8,14 @@ import { OrderDetailPanel } from './components/OrderDetailPanel';
 import { useOrderFilters } from './hooks/useOrderFilters';
 import { useOrders } from './hooks/useOrders';
 import { useOrderDetail } from './hooks/useOrderDetail';
-import type { OrderStatistics } from './types/order.types';
+import { useOrderStatistics } from './hooks/useOrderStatistics';
 
 export const OrderManagementPage = () => {
   const { filters, updateStatus, updateSearchTerm, updateTimeframe } = useOrderFilters();
   const { orders, isLoading, error } = useOrders(filters);
+  const { statistics, isLoading: isStatsLoading } = useOrderStatistics(filters);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const { orderWithItems, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId);
-
-  const statistics: OrderStatistics = useMemo(() => {
-    const totalOrders = orders.length;
-    const successfulOrders = orders.filter(o => o.eventType.includes('success')).length;
-    const failedOrders = totalOrders - successfulOrders;
-    const successRate = totalOrders > 0 ? (successfulOrders / totalOrders) * 100 : 0;
-
-    return {
-      totalOrders,
-      successfulOrders,
-      failedOrders,
-      successRate,
-    };
-  }, [orders]);
 
   if (error) {
     return (
@@ -40,7 +27,7 @@ export const OrderManagementPage = () => {
 
   return (
     <Flex flexDirection="column" style={{ position: 'relative', height: '100%', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
-      <OrderHeader statistics={statistics} isLoading={isLoading} />
+      <OrderHeader statistics={statistics} isLoading={isStatsLoading} />
       
       <OrderFilters
         status={filters.status}
@@ -52,7 +39,7 @@ export const OrderManagementPage = () => {
         onRefresh={() => {}}
       />
       
-      <div style={{ flex: 1, overflow: 'auto', padding: '24px' }}>
+      <div style={{ flex: 1, overflow: 'auto', padding: '16px 24px' }}>
         <OrdersTable
           orders={orders}
           onSelectOrder={setSelectedOrderId}

@@ -44,8 +44,11 @@ export const useOrders = (filters: OrderFilters) => {
       | filter ${statusFilter}${searchFilter}
       | fields timestamp, orderId, sessionId, shippingCostTotal, 
                shippingTrackingId, items, trace_id, event.type
+      | summarize by:{orderId}, latest=takeLast(timestamp), sessionId=takeLast(sessionId), 
+                  shippingCostTotal=takeLast(shippingCostTotal), shippingTrackingId=takeLast(shippingTrackingId),
+                  items=takeLast(items), trace_id=takeLast(trace_id), event.type=takeLast(event.type)
+      | fieldsRename timestamp=latest
       | sort timestamp desc
-      | limit 100
     `.trim();
   }, [filters]);
 

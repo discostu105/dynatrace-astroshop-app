@@ -28,7 +28,9 @@ export const OrderFilters = ({
   return (
     <Flex 
       gap={12} 
-      padding={20} 
+      padding={12}
+      paddingLeft={24}
+      paddingRight={24}
       alignItems="center"
       flexWrap="wrap"
       style={{ 
@@ -49,9 +51,11 @@ export const OrderFilters = ({
           value={status}
           onChange={(value) => onStatusChange(value as 'all' | 'success' | 'failure')}
         >
-          <Select.Option value="all">All Orders</Select.Option>
-          <Select.Option value="success">✅ Success Only</Select.Option>
-          <Select.Option value="failure">❌ Failures Only</Select.Option>
+          <Select.Content>
+            <Select.Option value="all">All Orders</Select.Option>
+            <Select.Option value="success">✅ Success Only</Select.Option>
+            <Select.Option value="failure">❌ Failures Only</Select.Option>
+          </Select.Content>
         </Select>
       </div>
       
@@ -66,7 +70,6 @@ export const OrderFilters = ({
       <Button 
         variant="default"
         onClick={onRefresh}
-        style={{ padding: '8px 16px' }}
       >
         🔄 Refresh
       </Button>
