@@ -3,6 +3,10 @@
 ## Project Overview
 This repository contains a **Dynatrace App** built with the Dynatrace App Toolkit "dt-app", running on **Dynatrace AppEngine**. Use the **App Toolkit** during development and CI (`dt-app dev`, `dt-app build`, `dt-app deploy`, `dt-app publish`).
 
+# DQL - Dynatrace Query Language
+
+If you want to do DQL queries, always check the knowledgebase (`dql_search`).
+
 ## Core Concepts
 ### Dynatrace Apps  
 - UI is **TypeScript/React** using **Strato Design System** components for consistent Dynatrace UX.  
