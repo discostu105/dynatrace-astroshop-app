@@ -41,7 +41,11 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       id: 'status',
       header: 'Status',
       accessor: (row: Order) => row.eventType.includes('success'),
-      cell: ({ value }: any) => <StatusBadge isSuccess={value} />,
+      cell: ({ value }: any) => (
+        <DataTable.DefaultCell>
+          <StatusBadge isSuccess={value} />
+        </DataTable.DefaultCell>
+      ),
       columnType: 'default' as const,
       width: 120,
       minWidth: 120,
@@ -51,20 +55,22 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: 'Order ID',
       accessor: 'orderId',
       cell: ({ value, rowData }: any) => (
-        <Text 
-          style={{ 
-            cursor: 'pointer', 
-            fontFamily: 'monospace',
-            fontSize: '12px',
-            color: 'var(--dt-colors-text-link-default)',
-          }}
-          onClick={(e: any) => {
-            e.stopPropagation();
-            navigator.clipboard.writeText(value || rowData.orderId);
-          }}
-        >
-          {value || rowData.orderId || 'N/A'}
-        </Text>
+        <DataTable.DefaultCell>
+          <Text 
+            style={{ 
+              cursor: 'pointer', 
+              fontFamily: 'monospace',
+              fontSize: '12px',
+              color: 'var(--dt-colors-text-link-default)',
+            }}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              navigator.clipboard.writeText(value || rowData.orderId);
+            }}
+          >
+            {value || rowData.orderId || 'N/A'}
+          </Text>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 280,
@@ -75,7 +81,9 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: 'Timestamp',
       accessor: 'timestamp',
       cell: ({ value }: any) => (
-        <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>{formatRelativeTime(value)}</Text>
+        <DataTable.DefaultCell>
+          <Text style={{ color: 'var(--dt-colors-text-secondary-default)' }}>{formatRelativeTime(value)}</Text>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 120,
@@ -86,7 +94,9 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: 'Session ID',
       accessor: 'sessionId',
       cell: ({ value }: any) => (
-        <Text style={{ fontFamily: 'monospace', fontSize: '12px' }}>{value}</Text>
+        <DataTable.DefaultCell>
+          <Text style={{ fontFamily: 'monospace', fontSize: '12px' }}>{value}</Text>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 280,
@@ -97,7 +107,9 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: '🚚 Shipping',
       accessor: 'shippingCostTotal',
       cell: ({ value }: any) => (
-        <Text style={{ fontWeight: '500' }}>{formatCurrency(value)}</Text>
+        <DataTable.DefaultCell>
+          <Text style={{ fontWeight: '500' }}>{formatCurrency(value)}</Text>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 130,
@@ -115,18 +127,20 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
         }
       },
       cell: ({ value }: any) => (
-        <div style={{ 
-          display: 'inline-flex', 
-          alignItems: 'center', 
-          gap: '6px',
-          padding: '4px 12px',
-          borderRadius: '12px',
-          backgroundColor: 'var(--dt-colors-background-surface-default)',
-          border: '1px solid var(--dt-colors-border-neutral-default)',
-        }}>
-          <Text style={{ fontWeight: '600', fontSize: '14px' }}>{value}</Text>
-          <Text style={{ fontSize: '11px', color: 'var(--dt-colors-text-secondary-default)' }}>items</Text>
-        </div>
+        <DataTable.DefaultCell>
+          <div style={{ 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            gap: '6px',
+            padding: '4px 12px',
+            borderRadius: '12px',
+            backgroundColor: 'var(--dt-colors-background-surface-default)',
+            border: '1px solid var(--dt-colors-border-neutral-default)',
+          }}>
+            <Text style={{ fontWeight: '600', fontSize: '14px' }}>{value}</Text>
+            <Text style={{ fontSize: '11px', color: 'var(--dt-colors-text-secondary-default)' }}>items</Text>
+          </div>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 110,
@@ -137,12 +151,14 @@ export const OrdersTable = ({ orders, onSelectOrder, isLoading }: OrdersTablePro
       header: 'Actions',
       accessor: (row: Order) => row.orderId,
       cell: ({ rowData }: any) => (
-        <Button 
-          variant="accent"
-          onClick={() => onSelectOrder(rowData.orderId)}
-        >
-          View
-        </Button>
+        <DataTable.DefaultCell>
+          <Button 
+            variant="accent"
+            onClick={() => onSelectOrder(rowData.orderId)}
+          >
+            View
+          </Button>
+        </DataTable.DefaultCell>
       ),
       columnType: 'default' as const,
       width: 100,
