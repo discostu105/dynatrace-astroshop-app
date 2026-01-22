@@ -18,10 +18,11 @@ export const useTraceInsights = (traceId: string | null, timestamp: string) => {
     return `
       fetch spans, from: ${timeRange.from}, to: ${timeRange.to}
       | filter trace.id == toUid("${traceId}")
+      | fieldsAdd service_name = entityName(dt.entity.service)
       | summarize 
           total_time = sum(duration),
           span_count = count(),
-          by: {service.name}
+          by: {service_name}
       | sort total_time desc
     `;
   }, [traceId, timeRange]);
@@ -99,7 +100,7 @@ export const useTraceInsights = (traceId: string | null, timestamp: string) => {
 
     // Process service breakdown
     const serviceBreakdown: ServiceTiming[] = (serviceData?.records || []).map((record: any) => ({
-      serviceName: record['service.name'] || 'unknown',
+      serviceName: record.service_name || 'unknown',
       totalTime: record.total_time || 0,
       spanCount: record.span_count || 0,
       percentage: totalDuration > 0 ? ((record.total_time || 0) / totalDuration) * 100 : 0,
