@@ -7,12 +7,12 @@ export const useOrderFilters = () => {
     timeframe: {
       from: {
         absoluteDate: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        value: 'now-2h',
+        value: 'now() - 2h',
         type: 'expression',
       },
       to: {
         absoluteDate: new Date().toISOString(),
-        value: 'now',
+        value: 'now()',
         type: 'expression',
       },
     },

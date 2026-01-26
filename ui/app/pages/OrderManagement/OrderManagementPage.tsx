@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Flex } from '@dynatrace/strato-components/layouts';
+import { Tabs, Tab } from '@dynatrace/strato-components-preview/navigation';
 import type { Timeframe } from '@dynatrace/strato-components-preview/core';
 import { OrderHeader } from './components/OrderHeader';
 import { OrderFilters } from './components/OrderFilters';
@@ -11,6 +13,8 @@ import { useOrderDetail } from './hooks/useOrderDetail';
 import { useOrderStatistics } from './hooks/useOrderStatistics';
 
 export const OrderManagementPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { filters, updateStatus, updateSearchTerm, updateTimeframe } = useOrderFilters();
   const { orders, isLoading, error } = useOrders(filters);
   const { statistics, isLoading: isStatsLoading } = useOrderStatistics(filters);
@@ -27,6 +31,10 @@ export const OrderManagementPage = () => {
 
   return (
     <Flex flexDirection="column" style={{ position: 'relative', height: '100%', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
+      <Tabs selectedIndex={location.pathname === '/geo' ? 1 : 0} onChange={(index) => navigate(index === 1 ? '/geo' : '/')}>
+        <Tab title="Orders">Orders</Tab>
+        <Tab title="Geographic">Geographic</Tab>
+      </Tabs>
       <OrderHeader statistics={statistics} isLoading={isStatsLoading} />
       
       <OrderFilters
