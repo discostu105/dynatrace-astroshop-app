@@ -1,8 +1,8 @@
 {
   "$schema": "./.dt-app/app.config.schema.json",
   "app": {
-    "name": "astroshop-app",
-    "version": "0.3.1",
+    "name": "Astroshop Orders",
+    "version": "0.3.2",
     "description": "A starting project with routing, fetching data, and charting",
     "id": "my.astroshop.app",
     "icon": "docs/assets/astroshop-icon.png",
