@@ -892,16 +892,10 @@ function generateActivities(): Activity[] {
   additionalActivities.forEach((activity, index) => {
     const daysAgoVal = 23 + Math.floor(index / 2);
     activities.push({
+      ...(activity as unknown as Activity),
       id: `activity-${id++}`,
-      type: activity.type,
-      userId: activity.userId,
-      userName: activity.userName,
-      userInitials: activity.userInitials,
       timestamp: daysAgo(daysAgoVal),
       relativeTime: `${daysAgoVal}d ago`,
-      title: activity.title,
-      description: `Activity description for ${activity.title}`,
-      ...(activity as any),
     });
   });
 

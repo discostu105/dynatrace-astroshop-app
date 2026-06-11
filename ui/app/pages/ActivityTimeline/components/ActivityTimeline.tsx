@@ -1,5 +1,4 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
 import { Text, Heading } from '@dynatrace/strato-components/typography';
 import { Button } from '@dynatrace/strato-components/buttons';
 import { Activity, GroupedActivities } from '../ActivityTimeline.const';
@@ -123,7 +122,6 @@ export const ActivityTimeline = ({
             <ActivityItem
               key={activity.id}
               activity={activity}
-              isFirst={itemIdx === 0}
               onSelectActivity={onSelectActivity}
             />
           ))}

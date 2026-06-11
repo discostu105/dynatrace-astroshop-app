@@ -1,6 +1,5 @@
 import React from 'react';
 import { Flex } from '@dynatrace/strato-components/layouts';
-import { Text } from '@dynatrace/strato-components/typography';
 import { Button } from '@dynatrace/strato-components/buttons';
 import { Activity } from '../ActivityTimeline.const';
 

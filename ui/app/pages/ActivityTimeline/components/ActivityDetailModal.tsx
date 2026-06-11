@@ -23,7 +23,7 @@ export const ActivityDetailModal = ({
       {/* Overlay */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
@@ -38,7 +38,7 @@ export const ActivityDetailModal = ({
       {/* Modal Panel */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           right: 0,
           top: 0,
           bottom: 0,
@@ -49,7 +49,8 @@ export const ActivityDetailModal = ({
           display: 'flex',
           flexDirection: 'column',
           animation: 'slideIn 0.3s ease',
-          maxHeight: '100vh',
+          maxHeight: '100%',
+          overflow: 'hidden',
         }}
       >
         {/* Header */}

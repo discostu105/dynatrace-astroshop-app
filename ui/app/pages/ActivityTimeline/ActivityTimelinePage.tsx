@@ -4,7 +4,7 @@ import { Flex } from '@dynatrace/strato-components/layouts';
 import { Heading, Text } from '@dynatrace/strato-components/typography';
 import { Button } from '@dynatrace/strato-components/buttons';
 import { useActivityTimeline } from './ActivityTimelinePage.hook';
-import { MOCK_ACTIVITIES, ActivityType } from './ActivityTimeline.const';
+import { MOCK_ACTIVITIES } from './ActivityTimeline.const';
 import { ActivityFilters } from './components/ActivityFilters';
 import { ActivityTimeline } from './components/ActivityTimeline';
 import { ActivityDetailModal } from './components/ActivityDetailModal';
@@ -19,7 +19,6 @@ export const ActivityTimelinePage = () => {
     selectedActivity,
     filteredActivities,
     paginatedGroups,
-    totalItems,
     hasMore,
     applyFilters,
     applySearchFilter,

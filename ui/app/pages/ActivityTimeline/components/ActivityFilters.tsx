@@ -10,7 +10,6 @@ import {
   GroupByOption,
   SortOrder,
   TEAM_MEMBERS,
-  ACTIVITY_TYPE_LABELS,
 } from '../ActivityTimeline.const';
 import { ActivityFilters as ActivityFiltersType } from '../ActivityTimelinePage.hook';
 

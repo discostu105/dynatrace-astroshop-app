@@ -14,13 +14,11 @@ import { BranchActivity } from './BranchActivity';
 
 interface ActivityItemProps {
   activity: Activity;
-  isFirst?: boolean;
   onSelectActivity: (activity: Activity) => void;
 }
 
 export const ActivityItem = ({
   activity,
-  isFirst = false,
   onSelectActivity,
 }: ActivityItemProps) => {
   const nodeColor = ACTIVITY_TYPE_COLORS[activity.type];

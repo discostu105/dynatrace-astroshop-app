@@ -41,7 +41,7 @@ export const useActivityTimeline = () => {
 
     // Date range filter
     const now = new Date();
-    let cutoffDate = new Date(now);
+    const cutoffDate = new Date(now);
 
     switch (filters.dateRange) {
       case 'today':
