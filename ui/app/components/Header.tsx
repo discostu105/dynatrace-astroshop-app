@@ -12,6 +12,9 @@ export const Header = () => {
         <AppHeader.AppNavLink as={Link} to="/geo">
           Geographic
         </AppHeader.AppNavLink>
+        <AppHeader.AppNavLink as={Link} to="/projects/astro-shop/activity">
+          Activity
+        </AppHeader.AppNavLink>
       </AppHeader.NavItems>
     </AppHeader>
   );
