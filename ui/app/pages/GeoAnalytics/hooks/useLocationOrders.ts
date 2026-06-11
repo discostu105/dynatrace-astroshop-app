@@ -9,10 +9,8 @@ function buildLocationOrdersQuery(
   filters: GeoFilters
 ): string {
   const { from, to } = filters.timeframe;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const fromTime = (from as any)?.value || 'now() - 7d';
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-  const toTime = (to as any)?.value || 'now()';
+  const fromTime = from?.value || 'now() - 7d';
+  const toTime = to?.value || 'now()';
 
   let filterConditions = `| filter event.type == "astroshop.web.checkout_success"
     | filter shippingAddress.country == "${location.country}"`;

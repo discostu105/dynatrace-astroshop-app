@@ -105,7 +105,6 @@ export const GeoAnalyticsPage: React.FC = () => {
             onClose={handleCloseDrilldown}
             onOrderClick={(order) => {
               // Could navigate to order detail here
-              console.log('Order clicked:', order);
             }}
           />
         )}
