@@ -13,8 +13,15 @@ import type {
   PRActivityData,
 } from '../types/activity.types';
 
+/**
+ * Activity type-specific content renderers.
+ * Each component formats and displays the relevant details for its activity type.
+ * Used in both ActivityItem (preview) and ActivityDetailModal (full details).
+ */
+
 // ========== COMMIT ACTIVITY ==========
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// Displays commit message, hash, branch, file stats, and expandable file list
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- expanded state is part of future feature expansion
 export const CommitActivityContent = ({ data }: { data: CommitActivityData }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -119,6 +126,7 @@ export const CommitActivityContent = ({ data }: { data: CommitActivityData }) =>
 };
 
 // ========== COMMENT ACTIVITY ==========
+// Displays comment context, preview text, line reference, and reply count
 export const CommentActivityContent = ({ data }: { data: CommentActivityData }) => {
   return (
     <Flex flexDirection="column" gap={12}>
@@ -150,6 +158,7 @@ export const CommentActivityContent = ({ data }: { data: CommentActivityData }) 
 };
 
 // ========== TASK ACTIVITY ==========
+// Displays task ID, title, status, priority, assignee, and due date
 export const TaskActivityContent = ({ data }: { data: TaskActivityData }) => {
   const statusColors: Record<string, { bg: string; text: string; icon: string }> = {
     created: {
@@ -255,6 +264,7 @@ export const TaskActivityContent = ({ data }: { data: TaskActivityData }) => {
 };
 
 // ========== SETTINGS ACTIVITY ==========
+// Displays setting name with before/after values and scope
 export const SettingsActivityContent = ({ data }: { data: SettingsActivityData }) => {
   return (
     <Flex flexDirection="column" gap={12}>
@@ -307,6 +317,7 @@ export const SettingsActivityContent = ({ data }: { data: SettingsActivityData }
 };
 
 // ========== USER ACTIVITY ==========
+// Displays user action description and optional target user information
 export const UserActivityContent = ({ data }: { data: UserActivityData }) => {
   return (
     <Flex flexDirection="column" gap={8}>
@@ -318,6 +329,7 @@ export const UserActivityContent = ({ data }: { data: UserActivityData }) => {
 };
 
 // ========== FILE ACTIVITY ==========
+// Displays file operation (created/deleted/renamed) with path and size info
 export const FileActivityContent = ({ data }: { data: FileActivityData }) => {
   const operationConfig: Record<string, { icon: string; label: string; color: string }> = {
     created: { icon: '✨', label: 'Created', color: 'var(--dt-colors-charts-categorical-grass-default)' },
@@ -373,6 +385,7 @@ export const FileActivityContent = ({ data }: { data: FileActivityData }) => {
 };
 
 // ========== BRANCH ACTIVITY ==========
+// Displays branch operation (created/deleted/merged) with branch name and source
 export const BranchActivityContent = ({ data }: { data: BranchActivityData }) => {
   const actionConfig: Record<string, string> = {
     created: '✨ Created branch',
@@ -396,6 +409,7 @@ export const BranchActivityContent = ({ data }: { data: BranchActivityData }) =>
 };
 
 // ========== PR ACTIVITY ==========
+// Displays PR number, title, status, and list of reviewers
 export const PRActivityContent = ({ data }: { data: PRActivityData }) => {
   const statusConfig: Record<string, { icon: string; color: string }> = {
     open: { icon: '🔵', color: 'var(--dt-colors-charts-categorical-blue-default)' },

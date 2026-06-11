@@ -11,8 +11,8 @@ import {
   paginateActivities,
 } from './utils/activityUtils';
 
-const PAGE_SIZE = 20;
-const DEBOUNCE_DELAY = 300;
+const PAGE_SIZE = 20; // Number of activities to load per page
+const DEBOUNCE_DELAY = 300; // Delay search updates to avoid excessive filtering
 
 export interface UseActivityTimelineReturn {
   // Data
@@ -37,7 +37,7 @@ export interface UseActivityTimelineReturn {
   setSearchQuery: (query: string) => void;
   setActivityType: (type: string) => void;
   setUserId: (userId: string) => void;
-  setDateRange: (range: string | DateRange) => void;
+  setDateRange: (range: DateRange) => void;
   setCustomDateRange: (start: string, end: string) => void;
   setGroupBy: (groupBy: GroupByOption) => void;
   setSortOrder: (order: SortOrder) => void;
@@ -77,6 +77,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
   }, [searchTimeout]);
 
   const setActivityType = useCallback((type: string) => {
+    // Type cast is safe: component validates type is a valid ActivityType before calling
     setFilters(prev => ({ ...prev, activityType: type as any }));
     setCurrentPage(0);
   }, []);
@@ -112,7 +113,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
 
   const refresh = useCallback(() => {
     setIsLoading(true);
-    // Simulate refresh delay
+    // Simulate network delay for fetching fresh activities
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -122,7 +123,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
     setSelectedActivity(activity);
   }, []);
 
-  // Compute derived data
+  // Compute derived data through a pipeline: filter → aggregate → sort → paginate → group
   const activities = useMemo(() => MOCK_ACTIVITIES, []);
 
   const activityCounts = useMemo(() => getActivityTypeCounts(activities) as Record<string, number>, [activities]);
@@ -132,6 +133,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
     return users;
   }, [activities]);
 
+  // Apply filters (search, type, user, date), then aggregate related activities
   const filteredActivities = useMemo(() => {
     let result = filterActivities(activities, filters);
     result = aggregateActivities(result);
@@ -141,6 +143,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
 
   const totalActivities = filteredActivities.length;
 
+  // Paginate filtered results for progressive loading
   const { items: paginatedActivities, hasMore } = useMemo(() => {
     const paginated = paginateActivities(filteredActivities, PAGE_SIZE, currentPage);
     return {
@@ -149,6 +152,7 @@ export const useActivityTimeline = (): UseActivityTimelineReturn => {
     };
   }, [filteredActivities, currentPage]);
 
+  // Group paginated results by the selected grouping option (date/user/type/none)
   const groupedActivities = useMemo(() => {
     return groupActivities(paginatedActivities, groupBy);
   }, [paginatedActivities, groupBy]);

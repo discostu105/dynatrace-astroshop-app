@@ -124,7 +124,7 @@ export const ActivityTimelinePage = () => {
     refresh,
   } = useActivityTimeline();
 
-  // Keyboard navigation support
+  // Keyboard navigation support: Escape to close the activity detail modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && selectedActivity) {
@@ -136,6 +136,7 @@ export const ActivityTimelinePage = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedActivity, selectActivity]);
 
+  // Check if any filter is active to show appropriate empty state message
   const hasFilters =
     filters.searchQuery ||
     filters.activityType !== 'all' ||

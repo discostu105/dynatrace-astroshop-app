@@ -21,7 +21,7 @@ interface ActivityDetailModalProps {
   activity: Activity | null;
   isOpen: boolean;
   onClose: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- marker for future strict typing
 }
 
 export const ActivityDetailModal = ({ activity, isOpen, onClose }: ActivityDetailModalProps) => {

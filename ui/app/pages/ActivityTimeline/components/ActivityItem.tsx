@@ -24,6 +24,7 @@ interface ActivityItemProps {
   showTimeline?: boolean;
 }
 
+// Format elapsed time in human-readable relative format (e.g., "5 min ago")
 const getRelativeTime = (timestamp: string): string => {
   const date = new Date(timestamp);
   const now = new Date();
@@ -53,6 +54,7 @@ export const ActivityItem = ({
   const relativeTime = getRelativeTime(activity.timestamp);
   const absoluteTime = formatAbsoluteTime(activity.timestamp);
 
+  // Render type-specific activity content with all field details
   const renderActivityContent = () => {
     switch (activity.data.type) {
       case 'commit':
