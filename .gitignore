@@ -45,4 +45,15 @@ Thumbs.db
 # Local app configuration (contains environment URL)
 app.config.local.json
 
+.env
+.env.local
+!.env.example
+
 .tmp
+
+# Storybook sandbox-only artifacts (never commit)
+.storybook/
+*.stories.tsx
+*.stories.ts
+*.stories.jsx
+*.stories.js
