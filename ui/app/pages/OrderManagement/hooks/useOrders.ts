@@ -21,10 +21,6 @@ const formatTimeForDQL = (timeValue: TimeValue): string => {
 
 export const useOrders = (filters: OrderFilters) => {
   const query = useMemo(() => {
-    console.log('Filters received:', filters);
-    console.log('Timeframe from:', filters.timeframe.from, typeof filters.timeframe.from);
-    console.log('Timeframe to:', filters.timeframe.to, typeof filters.timeframe.to);
-    
     const statusFilter = filters.status === 'all'
       ? '(event.type == "astroshop.web.checkout_success" or event.type == "astroshop.web.checkout_failure")'
       : `event.type == "astroshop.web.checkout_${filters.status}"`;
@@ -35,9 +31,6 @@ export const useOrders = (filters: OrderFilters) => {
     
     const fromTime = formatTimeForDQL(filters.timeframe.from);
     const toTime = formatTimeForDQL(filters.timeframe.to);
-    
-    console.log('Formatted fromTime:', fromTime);
-    console.log('Formatted toTime:', toTime);
     
     return `
       fetch bizevents, from: ${fromTime}, to: ${toTime}
