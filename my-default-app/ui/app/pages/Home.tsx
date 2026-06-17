@@ -57,6 +57,14 @@ export const Home = () => {
           }
           name="Developer Community"
         />
+        <Card
+          href="/logs"
+          inAppLink
+          imgSrc={
+            theme === "light" ? "./assets/data.png" : "./assets/data_dark.png"
+          }
+          name="Recent Logs"
+        />
       </Flex>
     </Flex>
   );
