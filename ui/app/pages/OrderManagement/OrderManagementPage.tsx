@@ -31,9 +31,10 @@ export const OrderManagementPage = () => {
 
   return (
     <Flex flexDirection="column" style={{ position: 'relative', height: '100%', backgroundColor: 'var(--dt-colors-background-container-default)' }}>
-      <Tabs selectedIndex={location.pathname === '/geo' ? 1 : 0} onChange={(index) => navigate(index === 1 ? '/geo' : '/')}>
+      <Tabs selectedIndex={location.pathname === '/geo' ? 1 : location.pathname === '/products' ? 2 : 0} onChange={(index) => navigate(index === 2 ? '/products' : index === 1 ? '/geo' : '/')}>
         <Tab title="Orders">Orders</Tab>
         <Tab title="Geographic">Geographic</Tab>
+        <Tab title="Products">Products</Tab>
       </Tabs>
       <OrderHeader statistics={statistics} isLoading={isStatsLoading} />
       

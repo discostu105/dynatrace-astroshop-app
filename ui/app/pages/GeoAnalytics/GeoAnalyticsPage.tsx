@@ -38,9 +38,10 @@ export const GeoAnalyticsPage: React.FC = () => {
   return (
     <Container>
       <Flex flexDirection="column" gap={32} padding={32}>
-        <Tabs selectedIndex={location.pathname === '/geo' ? 1 : 0} onChange={(index) => navigate(index === 1 ? '/geo' : '/')}>
+        <Tabs selectedIndex={location.pathname === '/geo' ? 1 : location.pathname === '/products' ? 2 : 0} onChange={(index) => navigate(index === 2 ? '/products' : index === 1 ? '/geo' : '/')}>
           <Tab title="Orders">Orders</Tab>
           <Tab title="Geographic">Geographic</Tab>
+          <Tab title="Products">Products</Tab>
         </Tabs>
         {/* Header with summary statistics */}
         <GeoHeader statistics={statistics} isLoading={isLoadingLocations} />
