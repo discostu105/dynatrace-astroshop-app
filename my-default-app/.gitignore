@@ -38,15 +38,3 @@ Thumbs.db
 # app-settings plugin local files
 /settings/local-mock-data/secrets.json
 /settings/local-mock-data/persistence/
-
-# dtctl configuration (contains tokens/credentials)
-.dtctl.yaml
-
-# Local app configuration (contains environment URL)
-app.config.local.json
-
-.env
-.env.local
-!.env.example
-
-.tmp
