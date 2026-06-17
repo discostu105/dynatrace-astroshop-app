@@ -7,6 +7,7 @@ import type { OrderStatistics } from '../types/order.types';
 interface OrderHeaderProps {
   statistics: OrderStatistics;
   isLoading: boolean;
+  successRateVariant?: 'ring' | 'gauge' | 'bar';
 }
 
 const MetricCard = ({ 
@@ -78,7 +79,15 @@ const MetricCard = ({
   );
 };
 
-const SuccessRateVisual = ({ rate, isLoading }: { rate: number; isLoading: boolean }) => {
+const SuccessRateVisual = ({ 
+  rate, 
+  isLoading, 
+  variant = 'ring' 
+}: { 
+  rate: number; 
+  isLoading: boolean;
+  variant?: 'ring' | 'gauge' | 'bar';
+}) => {
   if (isLoading) {
     return <ProgressCircle size="small" />;
   }
@@ -89,57 +98,244 @@ const SuccessRateVisual = ({ rate, isLoading }: { rate: number; isLoading: boole
     return 'var(--dt-colors-charts-status-critical-default)';
   };
   
-  return (
-    <Flex flexDirection="column" gap={8} alignItems="center" style={{ minWidth: '180px' }}>
-      <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-        <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
-          {/* Background circle */}
-          <circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="none"
-            stroke="var(--dt-colors-border-neutral-default)"
-            strokeWidth="8"
-          />
-          {/* Progress circle */}
-          <circle
-            cx="50"
-            cy="50"
-            r="40"
-            fill="none"
-            stroke={getColor()}
-            strokeWidth="8"
-            strokeDasharray={`${(rate / 100) * 251.2} 251.2`}
-            strokeLinecap="round"
-          />
-        </svg>
-        <div style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center'
-        }}>
-          <Text style={{ fontSize: '24px', fontWeight: '700', color: getColor() }}>
-            {rate.toFixed(0)}%
-          </Text>
+  const RING_CIRCUMFERENCE = 2 * Math.PI * 40;
+  
+  const labelStyle: React.CSSProperties = { 
+    fontSize: '11px', 
+    color: 'var(--dt-colors-text-secondary-default)', 
+    textTransform: 'uppercase', 
+    letterSpacing: '0.5px',
+    fontWeight: '600'
+  };
+  
+  // Variant 1: Ring (existing behavior)
+  if (variant === 'ring') {
+    return (
+      <Flex flexDirection="column" gap={8} alignItems="center" style={{ minWidth: '180px' }}>
+        <div style={{ position: 'relative', width: '100px', height: '100px' }}>
+          <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
+            <title>Success rate: {rate.toFixed(0)}%</title>
+            {/* Background circle */}
+            <circle
+              cx="50"
+              cy="50"
+              r="40"
+              fill="none"
+              stroke="var(--dt-colors-border-neutral-default)"
+              strokeWidth="8"
+            />
+            {/* Progress circle */}
+            <circle
+              cx="50"
+              cy="50"
+              r="40"
+              fill="none"
+              stroke={getColor()}
+              strokeWidth="8"
+              strokeDasharray={`${(rate / 100) * RING_CIRCUMFERENCE} ${RING_CIRCUMFERENCE}`}
+              strokeLinecap="round"
+            />
+          </svg>
+          <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textAlign: 'center'
+          }}>
+            <Text style={{ fontSize: '24px', fontWeight: '700', color: getColor() }}>
+              {rate.toFixed(0)}%
+            </Text>
+          </div>
         </div>
-      </div>
-      <Text style={{ 
-        fontSize: '11px', 
-        color: 'var(--dt-colors-text-secondary-default)', 
-        textTransform: 'uppercase', 
-        letterSpacing: '0.5px',
-        fontWeight: '600'
-      }}>
-        📈 Success Rate
-      </Text>
-    </Flex>
-  );
+        <Text style={labelStyle}>
+          📈 Success Rate
+        </Text>
+      </Flex>
+    );
+  }
+  
+  // Variant 2: Gauge (semicircular speedometer)
+  if (variant === 'gauge') {
+    const gaugeWidth = 120;
+    const gaugeHeight = 80;
+    const centerX = gaugeWidth / 2;
+    const centerY = gaugeHeight - 10;
+    const radius = 45;
+    const strokeWidth = 8;
+    
+    // Calculate arc parameters (180° sweep from left to right)
+    const startAngle = 180; // Start at left (180°)
+    const endAngle = 360; // End at right (360° or 0°)
+    const progressAngle = startAngle + (rate / 100) * 180;
+    
+    const polarToCartesian = (angle: number) => {
+      const angleInRadians = (angle * Math.PI) / 180;
+      return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians)
+      };
+    };
+    
+    const describeArc = (start: number, end: number) => {
+      const startPoint = polarToCartesian(start);
+      const endPoint = polarToCartesian(end);
+      const largeArcFlag = end - start <= 180 ? '0' : '1';
+      return `M ${startPoint.x} ${startPoint.y} A ${radius} ${radius} 0 ${largeArcFlag} 1 ${endPoint.x} ${endPoint.y}`;
+    };
+    
+    const needlePoint = polarToCartesian(progressAngle);
+    
+    return (
+      <Flex flexDirection="column" gap={8} alignItems="center" style={{ minWidth: '180px' }}>
+        <div style={{ position: 'relative', width: `${gaugeWidth}px`, height: `${gaugeHeight}px` }}>
+          <svg width={gaugeWidth} height={gaugeHeight}>
+            <title>Success rate: {rate.toFixed(0)}%</title>
+            {/* Background arc */}
+            <path
+              d={describeArc(180, 360)}
+              fill="none"
+              stroke="var(--dt-colors-border-neutral-default)"
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            {/* Progress arc */}
+            <path
+              d={describeArc(180, progressAngle)}
+              fill="none"
+              stroke={getColor()}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+            />
+            {/* Needle */}
+            <line
+              x1={centerX}
+              y1={centerY}
+              x2={needlePoint.x}
+              y2={needlePoint.y}
+              stroke={getColor()}
+              strokeWidth="2"
+            />
+            {/* Center dot */}
+            <circle
+              cx={centerX}
+              cy={centerY}
+              r="3"
+              fill={getColor()}
+            />
+          </svg>
+          <div style={{
+            position: 'absolute',
+            bottom: '4px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            textAlign: 'center'
+          }}>
+            <Text style={{ fontSize: '24px', fontWeight: '700', color: getColor() }}>
+              {rate.toFixed(0)}%
+            </Text>
+          </div>
+        </div>
+        <Text style={labelStyle}>
+          📈 Success Rate
+        </Text>
+      </Flex>
+    );
+  }
+  
+  // Variant 3: Bar (horizontal progress bar with gradient and milestones)
+  if (variant === 'bar') {
+    const barWidth = 200;
+    const barHeight = 12;
+    const milestone80 = (80 / 100) * barWidth;
+    const milestone95 = (95 / 100) * barWidth;
+    const progressWidth = (rate / 100) * barWidth;
+    
+    return (
+      <Flex flexDirection="column" gap={8} alignItems="center" style={{ minWidth: '220px' }}>
+        <Text style={{ fontSize: '24px', fontWeight: '700', color: getColor() }}>
+          {rate.toFixed(0)}%
+        </Text>
+        <div style={{ position: 'relative', width: `${barWidth}px` }}>
+          {/* Background bar */}
+          <div style={{
+            width: `${barWidth}px`,
+            height: `${barHeight}px`,
+            backgroundColor: 'var(--dt-colors-border-neutral-default)',
+            borderRadius: '6px',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            {/* Progress bar with gradient */}
+            <div style={{
+              width: `${progressWidth}px`,
+              height: '100%',
+              background: `linear-gradient(to right, rgba(44, 165, 44, 0.3), ${getColor()})`,
+              borderRadius: '6px',
+              transition: 'width 0.3s ease'
+            }} />
+          </div>
+          
+          {/* Milestone markers */}
+          <div style={{ position: 'relative', width: `${barWidth}px`, height: '20px' }}>
+            {/* 80% marker */}
+            <div style={{
+              position: 'absolute',
+              left: `${milestone80}px`,
+              top: '-6px',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                width: '2px',
+                height: '8px',
+                backgroundColor: 'var(--dt-colors-text-secondary-default)'
+              }} />
+              <Text style={{ 
+                fontSize: '10px', 
+                color: 'var(--dt-colors-text-secondary-default)',
+                marginTop: '2px'
+              }}>
+                80%
+              </Text>
+            </div>
+            
+            {/* 95% marker */}
+            <div style={{
+              position: 'absolute',
+              left: `${milestone95}px`,
+              top: '-6px',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}>
+              <div style={{
+                width: '2px',
+                height: '8px',
+                backgroundColor: 'var(--dt-colors-text-secondary-default)'
+              }} />
+              <Text style={{ 
+                fontSize: '10px', 
+                color: 'var(--dt-colors-text-secondary-default)',
+                marginTop: '2px'
+              }}>
+                95%
+              </Text>
+            </div>
+          </div>
+        </div>
+        <Text style={labelStyle}>
+          📈 Success Rate
+        </Text>
+      </Flex>
+    );
+  }
 };
 
-export const OrderHeader = ({ statistics, isLoading }: OrderHeaderProps) => {
+export const OrderHeader = ({ statistics, isLoading, successRateVariant }: OrderHeaderProps) => {
   return (
     <Flex 
       gap={20} 
@@ -165,7 +361,11 @@ export const OrderHeader = ({ statistics, isLoading }: OrderHeaderProps) => {
       </Flex>
       
       {/* Visual Success Rate Infographic */}
-      <SuccessRateVisual rate={statistics.successRate} isLoading={isLoading} />
+      <SuccessRateVisual 
+        rate={statistics.successRate} 
+        isLoading={isLoading} 
+        variant={successRateVariant}
+      />
       
       {/* Metrics in a horizontal row */}
       <Flex gap={16} style={{ flex: 1 }} alignItems="center" flexWrap="wrap">
