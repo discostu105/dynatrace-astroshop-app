@@ -45,4 +45,8 @@ Thumbs.db
 # Local app configuration (contains environment URL)
 app.config.local.json
 
+.env
+.env.local
+!.env.example
+
 .tmp
