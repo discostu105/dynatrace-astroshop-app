@@ -63,7 +63,7 @@ export const OrderDetailPanel = ({ order, items, onClose, isLoading }: OrderDeta
   const [selectedIndex, setSelectedIndex] = useState(0);
   const subtotal = items ? calculateOrderTotal(items) : 0;
   const total = subtotal + (order?.shippingCostTotal || 0);
-  const isSuccess = order?.eventType.includes('success');
+  const isSuccess = order?.eventType?.includes('success');
   
   return (
     <Flex 

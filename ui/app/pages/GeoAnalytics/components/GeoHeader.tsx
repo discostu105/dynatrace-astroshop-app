@@ -1,7 +1,6 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { Heading } from '@dynatrace/strato-components/typography';
-import { Surface } from '@dynatrace/strato-components/layouts';
 import type { GeoStatistics } from '../types/geo.types';
 import { formatCurrency, formatNumber } from '../utils/geoCalculations';
 

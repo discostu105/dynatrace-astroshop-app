@@ -1,6 +1,5 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Surface } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { Heading } from '@dynatrace/strato-components/typography';
 import { Button } from '@dynatrace/strato-components/buttons';
 import { DataTable } from '@dynatrace/strato-components-preview/tables';
@@ -85,7 +84,7 @@ export const LocationDrilldown: React.FC<LocationDrilldownProps> = ({
             fontSize: '12px',
             color: 'var(--dt-colors-text-secondary)',
             padding: '8px',
-            backgroundColor: 'var(--dt-colors-background-neutral)',
+            backgroundColor: 'var(--dt-colors-background-neutral-default)',
             borderRadius: '4px',
           }}
         >

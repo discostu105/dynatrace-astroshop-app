@@ -1,6 +1,5 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Surface } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { TimeframeSelector } from '@dynatrace/strato-components-preview/filters';
 import { Select, Label, FormField } from '@dynatrace/strato-components-preview/forms';
 import type { GeoFilters as GeoFiltersType } from '../types/geo.types';

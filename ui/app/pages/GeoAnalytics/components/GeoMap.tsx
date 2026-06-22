@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import { MapView, BubbleLayer } from '@dynatrace/strato-geo';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Surface } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import type { LocationData, GeoFilters } from '../types/geo.types';
 import { formatLocationName, formatCurrency } from '../utils/geoCalculations';
 
@@ -125,7 +124,7 @@ export const GeoMap: React.FC<GeoMapProps> = ({
           padding: '12px',
           fontSize: '12px',
           color: 'var(--dt-colors-text-secondary)',
-          backgroundColor: 'var(--dt-colors-background-neutral)',
+          backgroundColor: 'var(--dt-colors-background-neutral-default)',
           borderTop: '1px solid var(--dt-colors-border-container-default)',
         }}
       >

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Container } from '@dynatrace/strato-components/layouts';
+import { Flex, Container } from '@dynatrace/strato-components/layouts';
 import { Tabs, Tab } from '@dynatrace/strato-components-preview/navigation';
 import type { LocationData } from './types/geo.types';
 import { GeoHeader } from './components/GeoHeader';

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Surface } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { Heading } from '@dynatrace/strato-components/typography';
 import type { LocationData, GeoFilters } from '../types/geo.types';
 import { getTopLocations, formatLocationName, formatCurrency } from '../utils/geoCalculations';
@@ -41,7 +40,7 @@ export const LocationSummary: React.FC<LocationSummaryProps> = ({
                   padding: '8px 12px',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  backgroundColor: 'var(--dt-colors-background-neutral)',
+                  backgroundColor: 'var(--dt-colors-background-neutral-default)',
                   transition: 'background-color 0.2s',
                   display: 'flex',
                   justifyContent: 'space-between',
@@ -53,7 +52,7 @@ export const LocationSummary: React.FC<LocationSummaryProps> = ({
                 }}
                 onMouseLeave={(e) => {
                   (e.currentTarget as HTMLElement).style.backgroundColor =
-                    'var(--dt-colors-background-neutral)';
+                    'var(--dt-colors-background-neutral-default)';
                 }}
               >
                 <Flex gap={16} alignItems="center">

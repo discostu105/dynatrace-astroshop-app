@@ -1,6 +1,5 @@
 import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Surface } from '@dynatrace/strato-components/layouts';
+import { Flex, Surface } from '@dynatrace/strato-components/layouts';
 import { Heading } from '@dynatrace/strato-components/typography';
 import type { GeoFilters } from '../types/geo.types';
 

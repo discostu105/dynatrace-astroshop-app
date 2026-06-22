@@ -1,7 +1,6 @@
 import React from 'react';
 import { Flex } from '@dynatrace/strato-components/layouts';
-import { TextInput } from '@dynatrace/strato-components-preview/forms';
-import { Select } from '@dynatrace/strato-components-preview/forms';
+import { TextInput, Select } from '@dynatrace/strato-components-preview/forms';
 import { TimeframeSelector } from '@dynatrace/strato-components-preview/filters';
 import { Button } from '@dynatrace/strato-components/buttons';
 import type { Timeframe } from '@dynatrace/strato-components-preview/core';
