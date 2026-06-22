@@ -1,15 +1,18 @@
-import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { TextInput, Select } from '@dynatrace/strato-components-preview/forms';
-import { Button } from '@dynatrace/strato-components/buttons';
+import React from "react";
+import { Flex } from "@dynatrace/strato-components/layouts";
+import { TextInput, Select } from "@dynatrace/strato-components-preview/forms";
+import { Button } from "@dynatrace/strato-components/buttons";
+
+type Category = "All" | "Electronics" | "Apparel" | "Books" | "Home" | "Sports";
+type Availability = "All" | "Available" | "OutOfStock";
 
 interface ProductFiltersProps {
   searchTerm: string;
-  category: 'All' | 'Electronics' | 'Apparel' | 'Books' | 'Home' | 'Sports';
-  availability: 'All' | 'Available' | 'OutOfStock';
+  category: Category;
+  availability: Availability;
   onSearchChange: (value: string) => void;
-  onCategoryChange: (value: 'All' | 'Electronics' | 'Apparel' | 'Books' | 'Home' | 'Sports') => void;
-  onAvailabilityChange: (value: 'All' | 'Available' | 'OutOfStock') => void;
+  onCategoryChange: (value: Category) => void;
+  onAvailabilityChange: (value: Availability) => void;
   onClearFilters: () => void;
 }
 
@@ -22,7 +25,9 @@ export const ProductFilters = ({
   onAvailabilityChange,
   onClearFilters,
 }: ProductFiltersProps) => {
-  const hasActiveFilters = searchTerm !== '' || category !== 'All' || availability !== 'All';
+  // Show "Clear filters" button when any filter is active (non-default state)
+  const hasActiveFilters =
+    searchTerm !== "" || category !== "All" || availability !== "All";
 
   return (
     <Flex
@@ -33,10 +38,10 @@ export const ProductFilters = ({
       alignItems="center"
       flexWrap="wrap"
       style={{
-        backgroundColor: 'var(--dt-colors-background-container-default)',
+        backgroundColor: "var(--dt-colors-background-container-default)",
       }}
     >
-      <div style={{ flex: 1, minWidth: '250px', maxWidth: '400px' }}>
+      <div style={{ flex: 1, minWidth: "250px", maxWidth: "400px" }}>
         <TextInput
           placeholder="🔍 Search products…"
           value={searchTerm}
@@ -44,13 +49,11 @@ export const ProductFilters = ({
         />
       </div>
 
-      <div style={{ minWidth: '180px' }}>
+      <div style={{ minWidth: "180px" }}>
         <Select
           name="category"
           value={category}
-          onChange={(value) =>
-            onCategoryChange(value as 'All' | 'Electronics' | 'Apparel' | 'Books' | 'Home' | 'Sports')
-          }
+          onChange={(value) => onCategoryChange(value as Category)}
         >
           <Select.Content>
             <Select.Option value="All">All Categories</Select.Option>
@@ -63,11 +66,11 @@ export const ProductFilters = ({
         </Select>
       </div>
 
-      <div style={{ minWidth: '180px' }}>
+      <div style={{ minWidth: "180px" }}>
         <Select
           name="availability"
           value={availability}
-          onChange={(value) => onAvailabilityChange(value as 'All' | 'Available' | 'OutOfStock')}
+          onChange={(value) => onAvailabilityChange(value as Availability)}
         >
           <Select.Content>
             <Select.Option value="All">All Products</Select.Option>
