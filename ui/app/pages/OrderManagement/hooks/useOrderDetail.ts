@@ -4,6 +4,17 @@ import { parseOrderItems } from '../utils/parseOrderItems';
 import type { Order, OrderItem } from '../types/order.types';
 import type { Timeframe, TimeValue } from '@dynatrace/strato-components-preview/core';
 
+interface OrderRecord {
+  timestamp: string;
+  orderId?: string;
+  sessionId: string;
+  shippingCostTotal?: number;
+  shippingTrackingId?: string;
+  items: string;
+  trace_id: string;
+  'event.type': 'astroshop.web.checkout_success' | 'astroshop.web.checkout_failure';
+}
+
 // Helper to convert timeframe values to DQL format
 const formatTimeForDQL = (timeValue: TimeValue): string => {
   const value = timeValue.value;
@@ -50,7 +61,7 @@ export const useOrderDetail = (orderId: string | null, timeframe?: Timeframe) =>
   const orderWithItems = useMemo(() => {
     if (!orderId || !data?.records?.[0]) return null;
     
-    const record: any = data.records[0];
+    const record = data.records[0] as OrderRecord;
     const parsedItems = parseOrderItems(record.items);
     // Use orderId if available, otherwise use session-based identifier
     const identifier = record.orderId || `session:${record.sessionId}`;

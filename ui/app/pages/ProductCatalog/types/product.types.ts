@@ -1,5 +1,10 @@
-export type ProductCategory = 'Electronics' | 'Apparel' | 'Home & Garden' | 'Sports' | 'Books';
-export type ProductStatus = 'in-stock' | 'out-of-stock';
+export type ProductCategory =
+  | "Electronics"
+  | "Apparel"
+  | "Home & Garden"
+  | "Sports"
+  | "Books";
+export type ProductStatus = "in-stock" | "out-of-stock";
 
 export interface Product {
   id: string;
