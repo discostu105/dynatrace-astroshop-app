@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { Header } from "./components/Header";
 import { OrderManagementPage } from "./pages/OrderManagement/OrderManagementPage";
 import { GeoAnalyticsPage } from "./pages/GeoAnalytics/GeoAnalyticsPage";
+import { ProductsPage } from "./pages/Products/ProductsPage";
 
 export const App = () => {
   return (
@@ -15,6 +16,7 @@ export const App = () => {
         <Routes>
           <Route path="/" element={<OrderManagementPage />} />
           <Route path="/geo" element={<GeoAnalyticsPage />} />
+          <Route path="/products" element={<ProductsPage />} />
         </Routes>
       </Page.Main>
     </Page>
