@@ -1,47 +1,43 @@
-import React, { useState, useMemo } from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { ProductCatalogHeader } from './components/ProductCatalogHeader';
-import { ProductFilters } from './components/ProductFilters';
-import { ProductsTable } from './components/ProductsTable';
-import { ProductEditPanel } from './components/ProductEditPanel';
-import { mockProducts, type Product } from './mockProducts';
+import React, { useState, useMemo } from "react";
+import { Flex } from "@dynatrace/strato-components/layouts";
+import { ProductCatalogHeader } from "./components/ProductCatalogHeader";
+import { ProductFilters } from "./components/ProductFilters";
+import { ProductsTable } from "./components/ProductsTable";
+import { ProductEditPanel } from "./components/ProductEditPanel";
+import { mockProducts, type Product } from "./mockProducts";
 
 interface ProductCatalogPageProps {
   initialProducts?: Product[];
   initialEditTarget?: Product | null;
 }
 
-export const ProductCatalogPage = ({ 
+export const ProductCatalogPage = ({
   initialProducts = mockProducts,
   initialEditTarget = undefined,
 }: ProductCatalogPageProps) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('all');
-  const [availability, setAvailability] = useState('all');
-  const [editTarget, setEditTarget] = useState<Product | null | undefined>(initialEditTarget);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [category, setCategory] = useState("all");
+  const [availability, setAvailability] = useState("all");
+  const [editTarget, setEditTarget] = useState<Product | null | undefined>(
+    initialEditTarget,
+  );
 
+  // Filter products based on search term, category, and availability
+  // Filters are combined with AND logic - product must match all active filters
   const filteredProducts = useMemo(() => {
     return products.filter((product) => {
-      // Search filter
-      if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-        return false;
-      }
-      
-      // Category filter
-      if (category !== 'all' && product.category !== category) {
-        return false;
-      }
-      
-      // Availability filter
-      if (availability === 'available' && !product.available) {
-        return false;
-      }
-      if (availability === 'out-of-stock' && product.available) {
-        return false;
-      }
-      
-      return true;
+      const matchesSearch =
+        !searchTerm ||
+        product.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        category === "all" || product.category === category;
+      const matchesAvailability =
+        availability === "all" ||
+        (availability === "available" && product.available) ||
+        (availability === "out-of-stock" && !product.available);
+
+      return matchesSearch && matchesCategory && matchesAvailability;
     });
   }, [products, searchTerm, category, availability]);
 
@@ -55,34 +51,39 @@ export const ProductCatalogPage = ({
 
   const handleSave = (updatedProduct: Product) => {
     if (editTarget === null) {
-      // Add mode
+      // Add mode: append new product to the list
       setProducts([...products, updatedProduct]);
     } else {
-      // Edit mode
-      setProducts(products.map((p) => (p.productId === updatedProduct.productId ? updatedProduct : p)));
+      // Edit mode: replace the existing product by matching productId
+      setProducts(
+        products.map((p) =>
+          p.productId === updatedProduct.productId ? updatedProduct : p,
+        ),
+      );
     }
-    setEditTarget(undefined as any);
+    setEditTarget(undefined);
   };
 
   const handleClose = () => {
-    setEditTarget(undefined as any);
+    setEditTarget(undefined);
   };
 
   const handleClearFilters = () => {
-    setSearchTerm('');
-    setCategory('all');
-    setAvailability('all');
+    setSearchTerm("");
+    setCategory("all");
+    setAvailability("all");
   };
 
+  // Panel is open when editTarget is defined (either null for add mode, or a Product for edit mode)
   const isPanelOpen = editTarget !== undefined;
 
   return (
-    <Flex flexDirection="column" style={{ height: '100%', overflow: 'hidden' }}>
-      <ProductCatalogHeader 
-        products={filteredProducts} 
-        onAddProduct={handleAddProduct} 
+    <Flex flexDirection="column" style={{ height: "100%", overflow: "hidden" }}>
+      <ProductCatalogHeader
+        products={filteredProducts}
+        onAddProduct={handleAddProduct}
       />
-      
+
       <ProductFilters
         searchTerm={searchTerm}
         category={category}
@@ -92,15 +93,15 @@ export const ProductCatalogPage = ({
         onAvailabilityChange={setAvailability}
         onClear={handleClearFilters}
       />
-      
-      <Flex 
-        style={{ 
-          flex: 1, 
-          overflow: 'auto', 
-          padding: '16px 24px',
+
+      <Flex
+        style={{
+          flex: 1,
+          overflow: "auto",
+          padding: "16px 24px",
         }}
       >
-        <ProductsTable 
+        <ProductsTable
           products={filteredProducts}
           onEdit={handleEdit}
           isLoading={false}

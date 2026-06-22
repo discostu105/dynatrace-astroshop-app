@@ -1,8 +1,8 @@
-import React from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { TextInput } from '@dynatrace/strato-components-preview/forms';
-import { Select } from '@dynatrace/strato-components-preview/forms';
-import { Button } from '@dynatrace/strato-components/buttons';
+import React from "react";
+import { Flex } from "@dynatrace/strato-components/layouts";
+import { TextInput } from "@dynatrace/strato-components-preview/forms";
+import { Select } from "@dynatrace/strato-components-preview/forms";
+import { Button } from "@dynatrace/strato-components/buttons";
 
 interface ProductFiltersProps {
   searchTerm: string;
@@ -23,29 +23,31 @@ export const ProductFilters = ({
   onAvailabilityChange,
   onClear,
 }: ProductFiltersProps) => {
-  const hasActiveFilters = searchTerm !== '' || category !== 'all' || availability !== 'all';
+  // Show clear button only when at least one filter is active
+  const hasActiveFilters =
+    searchTerm !== "" || category !== "all" || availability !== "all";
 
   return (
-    <Flex 
-      gap={12} 
+    <Flex
+      gap={12}
       padding={16}
       paddingLeft={24}
       paddingRight={24}
       alignItems="center"
       flexWrap="wrap"
-      style={{ 
-        backgroundColor: 'var(--dt-colors-background-container-default)',
+      style={{
+        backgroundColor: "var(--dt-colors-background-container-default)",
       }}
     >
-      <div style={{ flex: 1, minWidth: '250px', maxWidth: '400px' }}>
+      <div style={{ flex: 1, minWidth: "250px", maxWidth: "400px" }}>
         <TextInput
           placeholder="🔍 Search products…"
           value={searchTerm}
           onChange={(value) => onSearchChange(value)}
         />
       </div>
-      
-      <div style={{ minWidth: '180px' }}>
+
+      <div style={{ minWidth: "180px" }}>
         <Select
           name="category"
           value={category}
@@ -61,8 +63,8 @@ export const ProductFilters = ({
           </Select.Content>
         </Select>
       </div>
-      
-      <div style={{ minWidth: '180px' }}>
+
+      <div style={{ minWidth: "180px" }}>
         <Select
           name="availability"
           value={availability}
@@ -77,10 +79,7 @@ export const ProductFilters = ({
       </div>
 
       {hasActiveFilters && (
-        <Button 
-          variant="default"
-          onClick={onClear}
-        >
+        <Button variant="default" onClick={onClear}>
           Clear filters
         </Button>
       )}

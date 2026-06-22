@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Flex } from '@dynatrace/strato-components/layouts';
-import { Heading, Text } from '@dynatrace/strato-components/typography';
-import { Button } from '@dynatrace/strato-components/buttons';
-import { TextInput } from '@dynatrace/strato-components-preview/forms';
-import { Select } from '@dynatrace/strato-components-preview/forms';
-import type { Product } from '../mockProducts';
+import React, { useState, useEffect } from "react";
+import { Flex } from "@dynatrace/strato-components/layouts";
+import { Heading, Text } from "@dynatrace/strato-components/typography";
+import { Button } from "@dynatrace/strato-components/buttons";
+import { TextInput } from "@dynatrace/strato-components-preview/forms";
+import { Select } from "@dynatrace/strato-components-preview/forms";
+import type { Product } from "../mockProducts";
+
+const DEFAULT_STOCK_COUNT = "0";
 
 interface ProductEditPanelProps {
   product: Product | null;
@@ -12,51 +14,71 @@ interface ProductEditPanelProps {
   onSave: (product: Product) => void;
 }
 
-export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelProps) => {
+export const ProductEditPanel = ({
+  product,
+  onClose,
+  onSave,
+}: ProductEditPanelProps) => {
   const isAddMode = !product;
-  
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState<'Electronics' | 'Apparel' | 'Books' | 'Home' | 'Sports'>('Electronics');
-  const [unitPrice, setUnitPrice] = useState('');
-  const [stockCount, setStockCount] = useState('');
-  const [available, setAvailable] = useState(true);
-  
-  const [errors, setErrors] = useState<{ name?: string; unitPrice?: string; stockCount?: string }>({});
 
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState<
+    "Electronics" | "Apparel" | "Books" | "Home" | "Sports"
+  >("Electronics");
+  const [unitPrice, setUnitPrice] = useState("");
+  const [stockCount, setStockCount] = useState("");
+  const [available, setAvailable] = useState(true);
+
+  const [errors, setErrors] = useState<{
+    name?: string;
+    unitPrice?: string;
+    stockCount?: string;
+  }>({});
+
+  // Reset form fields when product changes (switching between add/edit modes)
   useEffect(() => {
     if (product) {
       setName(product.name);
       setCategory(product.category);
+      // Convert price from cents to dollars for display
       setUnitPrice((product.unitPrice / 100).toFixed(2));
       setStockCount(product.stockCount.toString());
       setAvailable(product.available);
     } else {
-      setName('');
-      setCategory('Electronics');
-      setUnitPrice('');
-      setStockCount('0');
+      // Reset to defaults for add mode
+      setName("");
+      setCategory("Electronics");
+      setUnitPrice("");
+      setStockCount(DEFAULT_STOCK_COUNT);
       setAvailable(true);
     }
     setErrors({});
   }, [product]);
 
   const handleSave = () => {
-    const newErrors: { name?: string; unitPrice?: string; stockCount?: string } = {};
-    
+    const newErrors: {
+      name?: string;
+      unitPrice?: string;
+      stockCount?: string;
+    } = {};
+
+    // Validate product name is not empty
     if (!name.trim()) {
-      newErrors.name = 'Name is required';
+      newErrors.name = "Name is required";
     }
-    
+
+    // Validate price is a valid positive number
     const priceValue = parseFloat(unitPrice);
     if (isNaN(priceValue) || priceValue < 0) {
-      newErrors.unitPrice = 'Price must be a positive number';
+      newErrors.unitPrice = "Price must be a positive number";
     }
-    
+
+    // Validate stock count is a valid non-negative integer
     const stockValue = parseInt(stockCount, 10);
     if (isNaN(stockValue) || stockValue < 0) {
-      newErrors.stockCount = 'Stock must be a positive number';
+      newErrors.stockCount = "Stock must be a positive number";
     }
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -66,6 +88,7 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
       productId: product?.productId || `PROD-${Date.now()}`,
       name: name.trim(),
       category,
+      // Convert price from dollars to cents for storage
       unitPrice: Math.round(priceValue * 100),
       stockCount: stockValue,
       available,
@@ -75,64 +98,73 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
     onSave(updatedProduct);
   };
 
+  // Map category to default emoji for new products
   const getDefaultEmoji = (cat: string): string => {
     const emojiMap: Record<string, string> = {
-      Electronics: '📱',
-      Apparel: '👕',
-      Books: '📚',
-      Home: '🏠',
-      Sports: '⚽',
+      Electronics: "📱",
+      Apparel: "👕",
+      Books: "📚",
+      Home: "🏠",
+      Sports: "⚽",
     };
-    return emojiMap[cat] || '📦';
+    return emojiMap[cat] || "📦";
   };
 
   return (
-    <Flex 
-      flexDirection="column" 
-      gap={0} 
-      style={{ 
-        position: 'fixed',
+    <Flex
+      flexDirection="column"
+      gap={0}
+      style={{
+        position: "fixed",
         right: 0,
         top: 0,
         bottom: 0,
-        width: '480px',
-        backgroundColor: 'var(--dt-colors-background-surface-default)',
-        borderLeft: '1px solid var(--dt-colors-border-neutral-default)',
+        width: "480px",
+        backgroundColor: "var(--dt-colors-background-surface-default)",
+        borderLeft: "1px solid var(--dt-colors-border-neutral-default)",
         zIndex: 1000,
-        boxShadow: '-4px 0 24px rgba(0, 0, 0, 0.1)',
+        boxShadow: "-4px 0 24px rgba(0, 0, 0, 0.1)",
       }}
     >
       {/* Header */}
-      <Flex 
-        justifyContent="space-between" 
-        alignItems="center" 
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
         padding={24}
-        style={{ 
-          borderBottom: '1px solid var(--dt-colors-border-neutral-default)',
+        style={{
+          borderBottom: "1px solid var(--dt-colors-border-neutral-default)",
         }}
       >
         <Flex alignItems="center" gap={12}>
-          <span style={{ fontSize: '24px' }}>{isAddMode ? '➕' : '✏️'}</span>
-          <Heading level={3}>{isAddMode ? 'Add Product' : 'Edit Product'}</Heading>
+          <span style={{ fontSize: "24px" }}>{isAddMode ? "➕" : "✏️"}</span>
+          <Heading level={3}>
+            {isAddMode ? "Add Product" : "Edit Product"}
+          </Heading>
         </Flex>
-        <Button 
-          variant="default" 
+        <Button
+          variant="default"
           onClick={onClose}
-          style={{ fontSize: '20px', padding: '8px 12px' }}
+          style={{ fontSize: "20px", padding: "8px 12px" }}
         >
           ✕
         </Button>
       </Flex>
-      
+
       {/* Form */}
-      <Flex 
-        flexDirection="column" 
-        gap={24} 
+      <Flex
+        flexDirection="column"
+        gap={24}
         padding={24}
-        style={{ overflowY: 'auto', flex: 1 }}
+        style={{ overflowY: "auto", flex: 1 }}
       >
         <Flex flexDirection="column" gap={8}>
-          <Text style={{ fontSize: '13px', fontWeight: '600', color: 'var(--dt-colors-text-primary-default)' }}>
+          <Text
+            style={{
+              fontSize: "13px",
+              fontWeight: "600",
+              color: "var(--dt-colors-text-primary-default)",
+            }}
+          >
             Product Name *
           </Text>
           <TextInput
@@ -141,20 +173,40 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
             onChange={(value) => setName(value)}
           />
           {errors.name && (
-            <Text style={{ fontSize: '12px', color: 'var(--dt-colors-charts-categorical-sunrise-default)' }}>
+            <Text
+              style={{
+                fontSize: "12px",
+                color: "var(--dt-colors-charts-categorical-sunrise-default)",
+              }}
+            >
               {errors.name}
             </Text>
           )}
         </Flex>
 
         <Flex flexDirection="column" gap={8}>
-          <Text style={{ fontSize: '13px', fontWeight: '600', color: 'var(--dt-colors-text-primary-default)' }}>
+          <Text
+            style={{
+              fontSize: "13px",
+              fontWeight: "600",
+              color: "var(--dt-colors-text-primary-default)",
+            }}
+          >
             Category
           </Text>
           <Select
             name="category"
             value={category}
-            onChange={(value) => setCategory(value as 'Electronics' | 'Apparel' | 'Books' | 'Home' | 'Sports')}
+            onChange={(value) =>
+              setCategory(
+                value as
+                  | "Electronics"
+                  | "Apparel"
+                  | "Books"
+                  | "Home"
+                  | "Sports",
+              )
+            }
           >
             <Select.Content>
               <Select.Option value="Electronics">Electronics</Select.Option>
@@ -167,7 +219,13 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
         </Flex>
 
         <Flex flexDirection="column" gap={8}>
-          <Text style={{ fontSize: '13px', fontWeight: '600', color: 'var(--dt-colors-text-primary-default)' }}>
+          <Text
+            style={{
+              fontSize: "13px",
+              fontWeight: "600",
+              color: "var(--dt-colors-text-primary-default)",
+            }}
+          >
             Unit Price (USD) *
           </Text>
           <TextInput
@@ -176,14 +234,25 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
             onChange={(value) => setUnitPrice(value)}
           />
           {errors.unitPrice && (
-            <Text style={{ fontSize: '12px', color: 'var(--dt-colors-charts-categorical-sunrise-default)' }}>
+            <Text
+              style={{
+                fontSize: "12px",
+                color: "var(--dt-colors-charts-categorical-sunrise-default)",
+              }}
+            >
               {errors.unitPrice}
             </Text>
           )}
         </Flex>
 
         <Flex flexDirection="column" gap={8}>
-          <Text style={{ fontSize: '13px', fontWeight: '600', color: 'var(--dt-colors-text-primary-default)' }}>
+          <Text
+            style={{
+              fontSize: "13px",
+              fontWeight: "600",
+              color: "var(--dt-colors-text-primary-default)",
+            }}
+          >
             Stock Count *
           </Text>
           <TextInput
@@ -192,26 +261,37 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
             onChange={(value) => setStockCount(value)}
           />
           {errors.stockCount && (
-            <Text style={{ fontSize: '12px', color: 'var(--dt-colors-charts-categorical-sunrise-default)' }}>
+            <Text
+              style={{
+                fontSize: "12px",
+                color: "var(--dt-colors-charts-categorical-sunrise-default)",
+              }}
+            >
               {errors.stockCount}
             </Text>
           )}
         </Flex>
 
         <Flex flexDirection="column" gap={8}>
-          <Text style={{ fontSize: '13px', fontWeight: '600', color: 'var(--dt-colors-text-primary-default)' }}>
+          <Text
+            style={{
+              fontSize: "13px",
+              fontWeight: "600",
+              color: "var(--dt-colors-text-primary-default)",
+            }}
+          >
             Available
           </Text>
           <Flex gap={12}>
             <Button
-              variant={available ? 'accent' : 'default'}
+              variant={available ? "accent" : "default"}
               onClick={() => setAvailable(true)}
               style={{ flex: 1 }}
             >
               ✅ Available
             </Button>
             <Button
-              variant={!available ? 'accent' : 'default'}
+              variant={!available ? "accent" : "default"}
               onClick={() => setAvailable(false)}
               style={{ flex: 1 }}
             >
@@ -220,27 +300,19 @@ export const ProductEditPanel = ({ product, onClose, onSave }: ProductEditPanelP
           </Flex>
         </Flex>
       </Flex>
-      
+
       {/* Footer */}
-      <Flex 
-        gap={12} 
+      <Flex
+        gap={12}
         padding={24}
-        style={{ 
-          borderTop: '1px solid var(--dt-colors-border-neutral-default)',
+        style={{
+          borderTop: "1px solid var(--dt-colors-border-neutral-default)",
         }}
       >
-        <Button 
-          variant="default"
-          onClick={onClose}
-          style={{ flex: 1 }}
-        >
+        <Button variant="default" onClick={onClose} style={{ flex: 1 }}>
           Cancel
         </Button>
-        <Button 
-          variant="accent"
-          onClick={handleSave}
-          style={{ flex: 1 }}
-        >
+        <Button variant="accent" onClick={handleSave} style={{ flex: 1 }}>
           Save
         </Button>
       </Flex>
